@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FieldInput from '../../components/FieldInput';
 import PasswordInput from '../../components/PasswordInput';
-import Button from '../../components/Button';
+import { Button } from '../../components/form'
 import Logo from '../../images/logo/uweru-logo.png';
 import SignupStages from './components/SignupStages';
 

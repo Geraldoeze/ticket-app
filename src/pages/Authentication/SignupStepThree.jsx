@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FieldInput from '../../components/FieldInput';
-import Button from '../../components/Button';
+import { Button } from '../../components/form'
 import Logo from '../../images/logo/uweru-logo.png';
 import SignupStages from './components/SignupStages';
 import SelectField, { SelectFieldOption } from '../../components/SelectField';
