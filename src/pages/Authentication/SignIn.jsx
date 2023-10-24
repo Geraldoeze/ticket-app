@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FieldInput from '../../components/FieldInput';
 import PasswordInput from '../../components/PasswordInput';
-import Button from '../../components/Button';
+import {Button} from '../../components/form'
 import Logo from '../../images/logo/uweru-logo.png';
 
 export default function SignIn(props) {
@@ -57,7 +57,7 @@ export default function SignIn(props) {
               togglePassword={togglePassword}
               onTogglePassword={setTogglePassword}
             />
-            <Button width='w-[258px]' size='lg' elevation={1} variant='primary'>{loading ? 'Loading...' : 'Sign In'}</Button>
+            <Button style={{ background: "#ff5500", color: "#fff" }} width='w-[258px]' size='lg' elevation={1} variant='primary'>{loading ? 'Loading...' : 'Sign In'}</Button>
           </form>
         { error && <h4 style={{color: 'red'}} className="text-center" >Invalid Credentials</h4>}
          
