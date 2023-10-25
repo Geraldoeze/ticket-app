@@ -40,7 +40,8 @@
     "react-tailwindcss-select": "^1.8.5",
     "react-toastify": "^9.1.2",
     "sort-by": "^1.2.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "vite-plugin-pages": "^0.31.0"
   },
   "devDependencies": {
     "@types/node": "^20.2.3",
