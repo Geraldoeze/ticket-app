@@ -43,7 +43,7 @@ export default function SignIn(props) {
             label="Username"
             id="username"
             name="username"
-            placeholder="modelschool"
+            placeholder="Username"
             value={username}
             onChange={setUsername}
           />

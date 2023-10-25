@@ -20,157 +20,163 @@ import { getTickets } from "../../../api/httpRequest";
 
 export default function Subjects() {
   const navigate = useNavigate();
-  let data = React.useMemo(
-    () => [
-      {
-        id: "15456433",
-        title: "Game Tickets",
-        status: "created",
-        creator: "Mr Idris",
-        date: "24-10-2022",
-        priority: "high",
-      },
-      {
-        id: "73456423",
-        title: "Game Tickets",
-        status: "pending",
-        creator: "Mr Idris",
-        date: "24-10-2022",
-        priority: "high",
-      },
-      {
-        id: "45456423",
-        title: "Game Tickets",
-        status: "active",
-        creator: "Mr Idris",
-        date: "24-10-2022",
-        priority: "high",
-      },
-      {
-        id: "74096423",
-        title: "Game Tickets",
-        status: "active",
-        creator: "Mr Idris",
-        date: "24-10-2022",
-        priority: "high",
-      },
-      {
-        id: "76556423",
-        title: "Game Tickets",
-        status: "pending",
-        creator: "Mr Idris",
-        date: "24-10-2022",
-        priority: "high",
-      },
-      {
-        id: "73451223",
-        title: "Game Tickets",
-        status: "pending",
-        creator: "Mr Idris",
-        date: "24-10-2022",
-        priority: "high",
-      },
-      {
-        id: "73456459",
-        title: "Game Tickets",
-        status: "pending",
-        creator: "Mr Idris",
-        date: "24-10-2022",
-        priority: "high",
-      },
-      {
-        id: "73456479",
-        title: "Flight Ticket",
-        status: "pending",
-        creator: "Mr Idris",
-        date: "24-10-2022",
-        priority: "high",
-      },
-      {
-        id: "73456480",
-        title: "Flight Ticket",
-        status: "active",
-        creator: "Mr Danfulani",
-        date: "24-10-2022",
-        priority: "high",
-      },
-      {
-        id: "73456481",
-        title: "Flight Ticket",
-        status: "active",
-        creator: "Mr Danfulani",
-        date: "24-10-2022",
-        priority: "high",
-      },
-      {
-        id: "73456482",
-        title: "Flight Ticket",
-        status: "active",
-        creator: "Mr Danfulani",
-        date: "24-10-2022",
-        priority: "Medium",
-      },
-      {
-        id: "73456484",
-        title: "Flight Ticket",
-        status: "completed",
-        creator: "Mr Danfulani",
-        date: "24-10-2022",
-        priority: "Medium",
-      },
-      {
-        id: "73456482",
-        title: "Flight Ticket",
-        status: "active",
-        creator: "Mr Danfulani",
-        date: "22-09-2022",
-        priority: "Medium",
-      },
+  // let data = React.useMemo(
+  //   () => [
+  //     {
+  //       id: "15456433",
+  //       title: "Game Tickets",
+  //       status: "created",
+  //       creator: "Mr Idris",
+  //       date: "24-10-2022",
+  //       priority: "high",
+  //     },
+  //     {
+  //       id: "73456423",
+  //       title: "Game Tickets",
+  //       status: "pending",
+  //       creator: "Mr Idris",
+  //       date: "24-10-2022",
+  //       priority: "high",
+  //     },
+  //     {
+  //       id: "45456423",
+  //       title: "Game Tickets",
+  //       status: "active",
+  //       creator: "Mr Idris",
+  //       date: "24-10-2022",
+  //       priority: "high",
+  //     },
+  //     {
+  //       id: "74096423",
+  //       title: "Game Tickets",
+  //       status: "active",
+  //       creator: "Mr Idris",
+  //       date: "24-10-2022",
+  //       priority: "high",
+  //     },
+  //     {
+  //       id: "76556423",
+  //       title: "Game Tickets",
+  //       status: "pending",
+  //       creator: "Mr Idris",
+  //       date: "24-10-2022",
+  //       priority: "high",
+  //     },
+  //     {
+  //       id: "73451223",
+  //       title: "Game Tickets",
+  //       status: "pending",
+  //       creator: "Mr Idris",
+  //       date: "24-10-2022",
+  //       priority: "high",
+  //     },
+  //     {
+  //       id: "73456459",
+  //       title: "Game Tickets",
+  //       status: "pending",
+  //       creator: "Mr Idris",
+  //       date: "24-10-2022",
+  //       priority: "high",
+  //     },
+  //     {
+  //       id: "73456479",
+  //       title: "Flight Ticket",
+  //       status: "pending",
+  //       creator: "Mr Idris",
+  //       date: "24-10-2022",
+  //       priority: "high",
+  //     },
+  //     {
+  //       id: "73456480",
+  //       title: "Flight Ticket",
+  //       status: "active",
+  //       creator: "Mr Danfulani",
+  //       date: "24-10-2022",
+  //       priority: "high",
+  //     },
+  //     {
+  //       id: "73456481",
+  //       title: "Flight Ticket",
+  //       status: "active",
+  //       creator: "Mr Danfulani",
+  //       date: "24-10-2022",
+  //       priority: "high",
+  //     },
+  //     {
+  //       id: "73456482",
+  //       title: "Flight Ticket",
+  //       status: "active",
+  //       creator: "Mr Danfulani",
+  //       date: "24-10-2022",
+  //       priority: "Medium",
+  //     },
+  //     {
+  //       id: "73456484",
+  //       title: "Flight Ticket",
+  //       status: "completed",
+  //       creator: "Mr Danfulani",
+  //       date: "24-10-2022",
+  //       priority: "Medium",
+  //     },
+  //     {
+  //       id: "73456482",
+  //       title: "Flight Ticket",
+  //       status: "active",
+  //       creator: "Mr Danfulani",
+  //       date: "22-09-2022",
+  //       priority: "Medium",
+  //     },
 
-      {
-        id: "730926482",
-        title: "Flight Ticket",
-        status: "active",
-        creator: "Mr Danfulani",
-        date: "22-09-2022",
-        priority: "Medium",
-      },
+  //     {
+  //       id: "730926482",
+  //       title: "Flight Ticket",
+  //       status: "active",
+  //       creator: "Mr Danfulani",
+  //       date: "22-09-2022",
+  //       priority: "Medium",
+  //     },
 
-      {
-        id: "73456782",
-        title: "Flight Ticket",
-        status: "completed",
-        creator: "Mr Danfulani",
-        date: "22-09-2022",
-        priority: "Medium",
-      },
-      {
-        id: "73456522",
-        title: "Flight Ticket",
-        status: "completed",
-        creator: "Mr Danfulani",
-        date: "22-09-2022",
-        priority: "Medium",
-      },
-    ],
-    []
-  );
+  //     {
+  //       id: "73456782",
+  //       title: "Flight Ticket",
+  //       status: "completed",
+  //       creator: "Mr Danfulani",
+  //       date: "22-09-2022",
+  //       priority: "Medium",
+  //     },
+  //     {
+  //       id: "73456522",
+  //       title: "Flight Ticket",
+  //       status: "completed",
+  //       creator: "Mr Danfulani",
+  //       date: "22-09-2022",
+  //       priority: "Medium",
+  //     },
+  //   ],
+  //   []
+  // );
   const [pageLimit, setPageLimit] = React.useState<string | number>(50);
   const [page, setPage] = React.useState<string | number>(13);
   const [singleSelect, setSingleSelect] = React.useState<string>("");
   const [multiSelect, setMultiSelect] = React.useState<string[]>([]);
   const [search, setSearch] = React.useState<string>("");
+
   const [showFilter, setShowFilter] = React.useState<boolean>(false);
   const enableDelete = singleSelect || multiSelect?.length > 0 ? true : false;
   const enableViewData =
     singleSelect || multiSelect?.length === 1 ? true : false;
   //   let checkData = [...data] as Array<any>;
-  const [checkData, setCheckData] = React.useState<any>([...data]);
+  const [checkData, setCheckData] = React.useState<any>([]);
 
   useEffect(() => {
     const getAll = async () => {
       const result = await getTickets();
-      console.log(result);
+      console.log(result.data);
+      if (result?.status == 200) {
+        setCheckData(result?.data?.response);
+      } else {
+        alert("Error while Fetching Data");
+      }
     };
     getAll();
   }, []);
@@ -209,9 +215,9 @@ export default function Subjects() {
       toggleIdInArray([...prevState], id)
     );
   const handleToggleSelectAllItems = () =>
-    multiSelect.length !== data.length
+    multiSelect.length !== checkData.length
       ? setMultiSelect((prevState: Array<string>) => [
-          ...getAllIdsInArray(data, "id"),
+          ...getAllIdsInArray(checkData, "_id"),
         ])
       : setMultiSelect((prevState: Array<string>) => []);
   const handleApplyTableFilter = () => {
@@ -321,17 +327,17 @@ export default function Subjects() {
             {checkData?.map((user: any, index: number) => (
               <Table.CellRows
                 useSelectOption={false}
-                onClick={() => navigate(`/app/tickets/${user?.id}`)}
-                key={user?.id + "-" + index}
+                onClick={() => navigate(`/app/tickets/${user?._id}`)}
+                key={user?._id + "-" + index}
               >
                 <Table.Cell cellIndex={0}>
                   <Table.RowCheckInput
-                    id={user?.id}
+                    id={user?._id}
                     // isChecked={singleSelect === user?.id}
-                    isChecked={idExistInArray(multiSelect, user?.id)}
+                    isChecked={idExistInArray(multiSelect, user?._id)}
                     onChecked={handleMultiCheckItem}
                   />
-                  {user?.id}
+                  {index + 1}
                 </Table.Cell>
                 <Table.Cell>{user?.title}</Table.Cell>
                 <Table.Cell>{user?.creator}</Table.Cell>

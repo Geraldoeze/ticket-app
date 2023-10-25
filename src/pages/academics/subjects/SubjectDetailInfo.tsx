@@ -1,8 +1,10 @@
 import { Header } from "../../../components/container";
 import TextView from "../../../components/textview";
+import { useNavigate } from "react-router-dom";
 import TextViewGroup from "../../../components/textview/TextViewGroup";
 import { ButtonEvent, ButtonEventGroup } from "../../../components/button";
 import { Container, Section } from "../../../components/container";
+import { deleteTicket } from "../../../api/httpRequest";
 
 export default function SubjectDetailInfo({
   data,
@@ -11,41 +13,51 @@ export default function SubjectDetailInfo({
   data: any;
   show: boolean;
 }) {
-  const handleDeleteSubject = (id: string | number) => {
+  const navigate = useNavigate();
+  const handleDeleteSubject = async (id: string | number) => {
     console.log(id);
+    
+      const remove = await deleteTicket(id)
+      console.log(remove)
+      if (remove?.status === 200) {
+        navigate("/app/tickets");
+      } else {
+        alert("Ticket not deleted.")
+      }
+    
   };
+  console.log(data);
   return show ? (
     <Container>
-  
       <Section>
         <ButtonEventGroup>
-          <ButtonEvent variant="edit" onClick={() => {}}>
+          {/* <ButtonEvent variant="edit" onClick={() => {}}>
             Edit
-          </ButtonEvent>
+          </ButtonEvent> */}
 
           <ButtonEvent
             variant="delete"
-            onClick={() => handleDeleteSubject("123")}
+            onClick={() => handleDeleteSubject(data?._id)}
           >
             Delete
           </ButtonEvent>
         </ButtonEventGroup>
         <Header variant="h2">Subject Informtion</Header>
         <TextViewGroup>
-          <TextView title="ID">123445</TextView>
-          <TextView title="Title">Game Ticket</TextView>
+          <TextView title="ID">{data?._id}</TextView>
+          <TextView title="Title">{data?.title}</TextView>
         </TextViewGroup>
         <TextViewGroup>
-          <TextView title="Date">20-06-2022</TextView>
-          <TextView title="Status">Pending</TextView>
+          <TextView title="Date">{data?.date}</TextView>
+          <TextView title="Status">{data?.status}</TextView>
         </TextViewGroup>
         <TextViewGroup>
-          <TextView title="Priority">High</TextView>
-          <TextView title="Category">Category A</TextView>
+          <TextView title="Priority">{data?.priority}</TextView>
+          <TextView title="Category">{data?.category} </TextView>
         </TextViewGroup>
         <TextViewGroup>
-          <TextView title="Description">This is the ticket</TextView>
-          <TextView title="Result">Excellent</TextView>
+          <TextView title="Description">{data?.description}</TextView>
+          <TextView title=""></TextView>
         </TextViewGroup>
       </Section>
     </Container>

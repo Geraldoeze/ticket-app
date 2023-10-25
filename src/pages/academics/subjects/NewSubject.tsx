@@ -14,11 +14,13 @@ import { Container, Header, Section } from "../../../components/container";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Select from "../../../components/form/customSelect";
+import { addNewTicket } from "../../../api/httpRequest";
 
 import SelectField, {
   SelectFieldOption,
 } from "../../../components/SelectField";
 import { ROUTES_CONFIG } from "../../../layout/config";
+import useState from 'react';
 
 type SubjectFormData = {
   title: string;
@@ -75,7 +77,9 @@ export default function NewSubject() {
       setIsLoading(false);
     }, 4000);
 
-    setTicket(data);
+    setTicket(
+      {...data, status: "created", date: new Date().toLocaleDateString()}
+    );
     setShowConfirmation(true);
   };
 
@@ -100,7 +104,7 @@ export default function NewSubject() {
                     <FormGroup>
                       <Input
                         label="Title"
-                        name="subject_objectives"
+                        name="title"
                         placeholder="Ticket Title"
                         rules={{ required: "Title is required" }}
                       />
@@ -123,7 +127,7 @@ export default function NewSubject() {
                         <option value="low">C</option>
                       </Select>
                       <Select
-                        name="prio"
+                        name="priority"
                         label="Priority"
                         rules={{ required: "Select Priority" }}
                       >
@@ -138,7 +142,7 @@ export default function NewSubject() {
                       <Textarea
                         label="Description"
                         rules={{ required: "Kindly Input" }}
-                        name="desc"
+                        name="description"
                         placeholder="Description"
                       />
                     </FormGroup>
@@ -177,18 +181,28 @@ export default function NewSubject() {
 }
 
 function ConfirmationPage({ ticket }: { ticket: SubjectFormData }) {
+  const [error, setError] = React.useState<boolean>(false)
   const navigate = useNavigate();
-
+  console.log(ticket)
   const handleBackClick = () => {
-    navigate("/app/admins/academics/subjects");
+    navigate("/app/tickets");
   };
+  const handleSubmitClick = async () => {
+    console.log(ticket)
+    const sendData = await addNewTicket(ticket)
+    console.log(sendData)
+    if(sendData?.status == 201) {
+      navigate("/app/tickets");
+    } else {
+      setError(true)
+    }
+  }
 
   return (
     <Container>
       <Section>
         <Header variant="h2">Ticket Summary</Header>
-        <TextView title="ID">123445</TextView>
-        <TextView title="title">{ticket?.title}</TextView>
+        <TextView title="Title">{ticket?.title}</TextView>
         <TextView title=" Creator">{ticket?.creator}</TextView>
         <TextView title="Date">{ticket?.date}</TextView>
         <TextView title="Status">{ticket?.status}</TextView>
@@ -196,7 +210,9 @@ function ConfirmationPage({ ticket }: { ticket: SubjectFormData }) {
         <TextView title="Category">{ticket?.category}</TextView>
         <TextView title="Priority">{ticket?.priority}</TextView>
       </Section>
-
+      {error && <Section classNames="flex justify-center">
+        <h4 style={{color: 'red'}}>An Error Occurred</h4>
+      </Section>}
       <Section classNames="flex gap-6 justify-end">
         <Button
           classNames="w-25 ml-0"
@@ -211,7 +227,7 @@ function ConfirmationPage({ ticket }: { ticket: SubjectFormData }) {
           classNames="w-25 ml-0"
           style={{ background: "#ff5500", color: "#fff" }}
           variant="primary"
-          onClick={handleBackClick}
+          onClick={handleSubmitClick}
           type="button"
         >
           Submit
