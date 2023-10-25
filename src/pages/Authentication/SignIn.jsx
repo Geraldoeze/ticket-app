@@ -23,7 +23,7 @@ export default function SignIn(props) {
       setLoading(true)
       setTimeout(() => {
         setLoading(false)
-        navigate('/main/tickets');
+        navigate('/app/tickets');
       }, 6000)
     }
   }
