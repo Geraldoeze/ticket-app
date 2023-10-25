@@ -16,7 +16,7 @@ export default function SignIn(props) {
   const handleSignin = (e) => {
     setError(false)
     e?.preventDefault()
-    if (username?.length < 2 || password?.length < 4) {
+    if (username != 'test@test.com' || password != 'Abcd1111' ) {
       setError(true)
       return;
     } else {

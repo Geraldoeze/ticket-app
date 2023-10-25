@@ -40,3 +40,4 @@ export const deleteTicket = async (id) => {
     } catch (e) {
         return { status: 'error', msg: e?.response?.data?.message || e?.message }
     }
+}
