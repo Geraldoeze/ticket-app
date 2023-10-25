@@ -190,7 +190,7 @@ export default function Subjects() {
     
     if (multiSelect?.length !== 1) return;
     const subjectID = multiSelect?.toString();
-    navigate(`/app/ticket/${subjectID}`);
+    navigate(`/app/tickets/${subjectID}`);
   };
 
   const handleRemoveItem = () => {
@@ -206,7 +206,7 @@ export default function Subjects() {
       setMultiSelect([]);
     }
   };
-  const handleAddItem = () => navigate("/app/ticket/new");
+  const handleAddItem = () => navigate("/app/tickets/new");
   //functions to handle table input selections
   const handleSearch = (e: any) => alert(search + "...");
   const handleCheckItem = (id: string) =>
@@ -328,7 +328,7 @@ export default function Subjects() {
             {checkData?.map((user: any, index: number) => (
               <Table.CellRows
                 useSelectOption={false}
-                onClick={() => navigate(`/app/ticket/${user?._id}`)}
+                onClick={() => navigate(`/app/tickets/${user?._id}`)}
                 key={user?._id + "-" + index}
               >
                 <Table.Cell cellIndex={0}>
