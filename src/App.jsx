@@ -81,7 +81,7 @@ const App = () => {
     <Fragment>
       <Router>
         <Routes>
-          <Route exact path="/" element={<SignIn />} />
+          <Route exact path="/" element={<SubjectsRoutePages.Subjects  />} />
           <Route path="auth" element={<RouteLayout />}>
             <Route path="signup" element={<SignUp />} />
             {/* <Route path="steptwo" element={<SignupStepTwo />} /> */}
