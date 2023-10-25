@@ -187,9 +187,10 @@ export default function Subjects() {
     p && parseInt(p, 10) > 0 ? setPage(p) : setPage(1);
 
   const handleViewItem = () => {
+    
     if (multiSelect?.length !== 1) return;
     const subjectID = multiSelect?.toString();
-    navigate(`/app/tickets/${subjectID}`);
+    navigate(`/main/ticket/${subjectID}`);
   };
 
   const handleRemoveItem = () => {
@@ -205,7 +206,7 @@ export default function Subjects() {
       setMultiSelect([]);
     }
   };
-  const handleAddItem = () => navigate("/app/tickets/new");
+  const handleAddItem = () => navigate("/main/ticket/new");
   //functions to handle table input selections
   const handleSearch = (e: any) => alert(search + "...");
   const handleCheckItem = (id: string) =>
@@ -282,13 +283,13 @@ export default function Subjects() {
             >
               View
             </ButtonEvent>
-            <ButtonEvent
+            {/* <ButtonEvent
               hide={!enableDelete}
               variant="delete"
               onClick={handleRemoveItem}
             >
               Delete
-            </ButtonEvent>
+            </ButtonEvent> */}
             {/* <ButtonEvent variant="sheet" onClick={exportPDF}>
               Download
             </ButtonEvent>
@@ -327,7 +328,7 @@ export default function Subjects() {
             {checkData?.map((user: any, index: number) => (
               <Table.CellRows
                 useSelectOption={false}
-                onClick={() => navigate(`/app/tickets/${user?._id}`)}
+                onClick={() => navigate(`/main/ticket/${user?._id}`)}
                 key={user?._id + "-" + index}
               >
                 <Table.Cell cellIndex={0}>
