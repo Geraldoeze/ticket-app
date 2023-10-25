@@ -81,7 +81,7 @@ const App = () => {
     <Fragment>
       <Router>
         <Routes>
-          <Route exact path="/" element={<SubjectsRoutePages.Subjects  />} />
+          <Route exact path="/" element={<SignIn  />} />
           <Route path="auth" element={<RouteLayout />}>
             <Route path="signup" element={<SignUp />} />
             {/* <Route path="steptwo" element={<SignupStepTwo />} /> */}
@@ -89,12 +89,7 @@ const App = () => {
             {/* <Route path="signin" element={<SignIn />} /> */}
             <Route index element={<SignIn />} />
           </Route>
-          <Route path="main" element={<RouteLayout />}>
-              <Route path="tickets" element={<SubjectsRoutePages.Subjects />} />
-              <Route path="ticket/new" element={<SubjectsRoutePages.NewSubject />} />
-              <Route path="ticket/:ticketId" element={<SubjectsRoutePages.Subject />} />
-              <Route index element={<SubjectsRoutePages.Subjects />} />
-            </Route>
+          
           <Route path="app" element={<RouteLayout />}>
             {/* Template Pages */}
             {/* <Route path="templates" element={<RouteLayout />}>
@@ -126,12 +121,12 @@ const App = () => {
               <Route index element={<StudentRoutePages.Students />} />
             </Route> */}
 
-            {/* <Route path={ROUTES_CONFIG.admin.entities.tickets} element={<RouteLayout />}>
+            <Route path={ROUTES_CONFIG.admin.entities.tickets} element={<RouteLayout />}>
               <Route path="tickets" element={<SubjectsRoutePages.Subjects />} />
               <Route path="new" element={<SubjectsRoutePages.NewSubject />} />
               <Route path=":ticketId" element={<SubjectsRoutePages.Subject />} />
               <Route index element={<SubjectsRoutePages.Subjects />} />
-            </Route> */}
+            </Route>
 
             {/* <Route path={ROUTES_CONFIG.admin.entities.classes} element={<RouteLayout />}>
               <Route path="classes" element={<ClassesRoutePages.Classes />} />
@@ -157,7 +152,7 @@ const App = () => {
 
             {/* <Route index element={<TemplateRouter.DataTablePage />} /> */}
           </Route>
-          <Route exact path="*" element={<Navigate to="/main/tickets" />} />
+          <Route exact path="*" element={<Navigate to="/app/tickets" />} />
           {/* <Route exact path="/app/admins/parents" element={<Parents />} /> */}
           {/* <Route
             exact
