@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DefaultLayout from "../../../layout/DefaultLayout";
 import BreadCrumb from "../../../components/BreadCrumb";
 import Table from "../../../components/table";
@@ -14,6 +14,7 @@ import Modal from "../../../components/modal";
 import SubjectFilter from "./SubjectFilter";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { getTickets } from "../../../api/httpRequest";
 
 // import SubjectFilter from './SubjectFilter';
 
@@ -28,8 +29,6 @@ export default function Subjects() {
         creator: "Mr Idris",
         date: "24-10-2022",
         priority: "high",
-
-
       },
       {
         id: "73456423",
@@ -38,7 +37,6 @@ export default function Subjects() {
         creator: "Mr Idris",
         date: "24-10-2022",
         priority: "high",
-        
       },
       {
         id: "45456423",
@@ -47,7 +45,6 @@ export default function Subjects() {
         creator: "Mr Idris",
         date: "24-10-2022",
         priority: "high",
-        
       },
       {
         id: "74096423",
@@ -56,7 +53,6 @@ export default function Subjects() {
         creator: "Mr Idris",
         date: "24-10-2022",
         priority: "high",
-        
       },
       {
         id: "76556423",
@@ -65,7 +61,6 @@ export default function Subjects() {
         creator: "Mr Idris",
         date: "24-10-2022",
         priority: "high",
-        
       },
       {
         id: "73451223",
@@ -74,7 +69,6 @@ export default function Subjects() {
         creator: "Mr Idris",
         date: "24-10-2022",
         priority: "high",
-        
       },
       {
         id: "73456459",
@@ -83,7 +77,6 @@ export default function Subjects() {
         creator: "Mr Idris",
         date: "24-10-2022",
         priority: "high",
-        
       },
       {
         id: "73456479",
@@ -92,7 +85,6 @@ export default function Subjects() {
         creator: "Mr Idris",
         date: "24-10-2022",
         priority: "high",
-        
       },
       {
         id: "73456480",
@@ -101,7 +93,6 @@ export default function Subjects() {
         creator: "Mr Danfulani",
         date: "24-10-2022",
         priority: "high",
-        
       },
       {
         id: "73456481",
@@ -110,7 +101,6 @@ export default function Subjects() {
         creator: "Mr Danfulani",
         date: "24-10-2022",
         priority: "high",
-        
       },
       {
         id: "73456482",
@@ -119,7 +109,6 @@ export default function Subjects() {
         creator: "Mr Danfulani",
         date: "24-10-2022",
         priority: "Medium",
-        
       },
       {
         id: "73456484",
@@ -128,7 +117,6 @@ export default function Subjects() {
         creator: "Mr Danfulani",
         date: "24-10-2022",
         priority: "Medium",
-        
       },
       {
         id: "73456482",
@@ -137,7 +125,6 @@ export default function Subjects() {
         creator: "Mr Danfulani",
         date: "22-09-2022",
         priority: "Medium",
-        
       },
 
       {
@@ -147,7 +134,6 @@ export default function Subjects() {
         creator: "Mr Danfulani",
         date: "22-09-2022",
         priority: "Medium",
-        
       },
 
       {
@@ -157,7 +143,6 @@ export default function Subjects() {
         creator: "Mr Danfulani",
         date: "22-09-2022",
         priority: "Medium",
-        
       },
       {
         id: "73456522",
@@ -166,7 +151,6 @@ export default function Subjects() {
         creator: "Mr Danfulani",
         date: "22-09-2022",
         priority: "Medium",
-        
       },
     ],
     []
@@ -182,6 +166,14 @@ export default function Subjects() {
     singleSelect || multiSelect?.length === 1 ? true : false;
   //   let checkData = [...data] as Array<any>;
   const [checkData, setCheckData] = React.useState<any>([...data]);
+
+  useEffect(() => {
+    const getAll = async () => {
+      const result = await getTickets();
+      console.log(result);
+    };
+    getAll();
+  }, []);
 
   const handleChangePageLimit = (v: any) => setPageLimit(v);
   const handleChangePage = (v: any) => setPage(v);
@@ -238,9 +230,7 @@ export default function Subjects() {
     doc.setFontSize(14);
 
     const title = "Ticket Report";
-    const headers = [
-      ["ID", "TITLE", " CREATOR", "DATE", "PRIORITY",  "STATUS"],
-    ];
+    const headers = [["ID", "TITLE", " CREATOR", "DATE", "PRIORITY", "STATUS"]];
 
     const data = checkData.map((ticket: any) => [
       ticket.id,
@@ -248,7 +238,7 @@ export default function Subjects() {
       ticket.creator,
       ticket.date,
       ticket.priority,
-      
+
       ticket.status,
       ticket.amount,
     ]);
@@ -323,7 +313,7 @@ export default function Subjects() {
             <Table.Row>Creator</Table.Row>
             <Table.Row>Date</Table.Row>
             <Table.Row>Priority</Table.Row>
-            
+
             <Table.Row>Status</Table.Row>
           </Table.TableRow>
 
