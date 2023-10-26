@@ -115,9 +115,9 @@ export default function NewSubject() {
                         rules={{ required: "Select Category" }}
                       >
                         <option value="">Select...</option>
-                        <option value="high">A</option>
-                        <option value="medium">B</option>
-                        <option value="low">C</option>
+                        <option value="Transactions">Transactions</option>
+                        <option value="Billing">Billing</option>
+                        <option value="Inquiry">Inquiry</option>
                       </Select>
                       <Select
                         name="priority"
@@ -153,8 +153,8 @@ export default function NewSubject() {
                         rules={{ required: "Select Type" }}
                       >
                         <option value="">Select...</option>
-                        <option value="walk_in">Walk In</option>
-                        <option value="call_in">Call In</option>
+                        <option value="Walk In">Walk In</option>
+                        <option value="Call In">Call In</option>
                       </Select>
                       <Input
                         label="Location"

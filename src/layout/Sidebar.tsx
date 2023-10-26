@@ -87,14 +87,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: {sidebarOpen: any, setSidebarO
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/app">
-          <div className='flex items-center gap-5 '>
+          <div >
             <h1 className="text-white font-extrabold text-lg">Ticket</h1>
-            <img
-            className="mx-auto h-10 w-auto"
-            src={Logo}
-            alt="vast"
-            style={{width: '60px', height: '60px', borderRadius: '50%'}}
-          />
+           
           
           </div>
           {/* <img src={Logo} alt="Logo" style={{width: '90px', height: '90px'}} /> */}

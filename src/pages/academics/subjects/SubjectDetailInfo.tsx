@@ -95,6 +95,10 @@ export default function SubjectDetailInfo({
           <TextView title="Type">{data?.customer_type}</TextView>
           <TextView title="Description">{data?.description}</TextView>
         </TextViewGroup>
+        <TextViewGroup>
+          <TextView title="Location">{data?.location}</TextView>
+          <TextView title=""></TextView>
+        </TextViewGroup>
       </Section>
       
       {/* Render the messages */}

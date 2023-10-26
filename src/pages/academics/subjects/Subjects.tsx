@@ -187,7 +187,6 @@ export default function Subjects() {
     p && parseInt(p, 10) > 0 ? setPage(p) : setPage(1);
 
   const handleViewItem = () => {
-    
     if (multiSelect?.length !== 1) return;
     const subjectID = multiSelect?.toString();
     navigate(`/app/tickets/${subjectID}`);
@@ -242,15 +241,13 @@ export default function Subjects() {
     const data = checkData.map((ticket: any) => [
       ticket.id,
       ticket.title,
-      ticket.creator,
       ticket.date,
       ticket.priority,
       ticket.customer_name,
       ticket.phone_number,
       ticket.customer_type,
-      ticket.location,
+
       ticket.status,
-      ticket.amount,
     ]);
 
     let content = {
@@ -324,8 +321,6 @@ export default function Subjects() {
             <Table.Row>Date</Table.Row>
             <Table.Row>Priority</Table.Row>
             <Table.Row>Customer Type</Table.Row>
-            <Table.Row>Location</Table.Row>
-            <Table.Row>Phone Number</Table.Row>
             <Table.Row>Status</Table.Row>
           </Table.TableRow>
 
@@ -350,8 +345,7 @@ export default function Subjects() {
                 <Table.Cell>{user?.date}</Table.Cell>
                 <Table.Cell>{user?.priority}</Table.Cell>
                 <Table.Cell>{user?.customer_type}</Table.Cell>
-                <Table.Cell>{user?.location}</Table.Cell>
-                <Table.Cell>{user?.phone_number}</Table.Cell>
+                
                 <Table.StatusCell
                   variant={user?.status === "active" ? "success" : "primary"}
                 >
