@@ -63,10 +63,12 @@ export default function SubjectDetailInfo({
     <Container>
       <Section>
         <ButtonEventGroup>
-          {/* <ButtonEvent variant="edit" onClick={() => {}}>
-            Edit
-          </ButtonEvent> */}
-
+          <ButtonEvent variant="edit" onClick={() => {}}>
+            Resolved
+          </ButtonEvent>
+          <ButtonEvent variant="edit" onClick={() => {}}>
+            Unresolved
+          </ButtonEvent>
           <ButtonEvent
             variant="delete"
             onClick={() => handleDeleteSubject(data?._id)}
