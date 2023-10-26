@@ -237,7 +237,7 @@ export default function Subjects() {
     doc.setFontSize(14);
 
     const title = "Ticket Report";
-    const headers = [["ID", "TITLE", " CREATOR", "DATE", "PRIORITY", "STATUS"]];
+    const headers = [["ID", "TITLE", "NAME", "DATE", "PRIORITY", "STATUS"]];
 
     const data = checkData.map((ticket: any) => [
       ticket.id,
@@ -245,7 +245,10 @@ export default function Subjects() {
       ticket.creator,
       ticket.date,
       ticket.priority,
-
+      ticket.customer_name,
+      ticket.phone_number,
+      ticket.customer_type,
+      ticket.location,
       ticket.status,
       ticket.amount,
     ]);
@@ -317,10 +320,12 @@ export default function Subjects() {
               ID
             </Table.Row>
             <Table.Row>Title</Table.Row>
-            <Table.Row>Creator</Table.Row>
+            <Table.Row>Customer Name</Table.Row>
             <Table.Row>Date</Table.Row>
             <Table.Row>Priority</Table.Row>
-
+            <Table.Row>Customer Type</Table.Row>
+            <Table.Row>Location</Table.Row>
+            <Table.Row>Phone Number</Table.Row>
             <Table.Row>Status</Table.Row>
           </Table.TableRow>
 
@@ -341,9 +346,12 @@ export default function Subjects() {
                   {index + 1}
                 </Table.Cell>
                 <Table.Cell>{user?.title}</Table.Cell>
-                <Table.Cell>{user?.creator}</Table.Cell>
+                <Table.Cell>{user?.customer_name}</Table.Cell>
                 <Table.Cell>{user?.date}</Table.Cell>
                 <Table.Cell>{user?.priority}</Table.Cell>
+                <Table.Cell>{user?.customer_type}</Table.Cell>
+                <Table.Cell>{user?.location}</Table.Cell>
+                <Table.Cell>{user?.phone_number}</Table.Cell>
                 <Table.StatusCell
                   variant={user?.status === "active" ? "success" : "primary"}
                 >

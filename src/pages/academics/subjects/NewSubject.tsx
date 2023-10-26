@@ -20,11 +20,11 @@ import SelectField, {
   SelectFieldOption,
 } from "../../../components/SelectField";
 import { ROUTES_CONFIG } from "../../../layout/config";
-import useState from 'react';
+import useState from "react";
 
 type SubjectFormData = {
   title: string;
-  creator: string;
+  customer_name: string;
   date: string;
   priority: string;
   result: string;
@@ -32,19 +32,10 @@ type SubjectFormData = {
   category: string;
   status: string;
   amount: string;
+  customer_type: string;
+  phone_number: string;
+  location: string;
 
-  subject_objectives: string;
-  key_topics: string;
-  teaching_methodology: string;
-  assessment_methods: string;
-  resources_and_materials: string;
-  careers_and_future_pathways: string;
-  additional_support: string;
-  extracurricular_opportunities: string;
-  cross_curricular_connections: string;
-  recommended_electives: string;
-  enrichment_or_extension_opportunities: string;
-  revision_or_study_tips: string;
 };
 
 export default function NewSubject() {
@@ -77,9 +68,11 @@ export default function NewSubject() {
       setIsLoading(false);
     }, 4000);
 
-    setTicket(
-      {...data, status: "created", date: new Date().toLocaleDateString()}
-    );
+    setTicket({
+      ...data,
+      status: "created",
+      date: new Date().toLocaleDateString(),
+    });
     setShowConfirmation(true);
   };
 
@@ -109,10 +102,10 @@ export default function NewSubject() {
                         rules={{ required: "Title is required" }}
                       />
                       <Input
-                        label="Creator"
-                        name="creator"
-                        placeholder=" Creator"
-                        rules={{ required: "Creator is required" }}
+                        label="Customer Name"
+                        name="customer_name"
+                        placeholder="Name"
+                        rules={{ required: "Name is required" }}
                       />
                     </FormGroup>
                     <FormGroup>
@@ -144,6 +137,30 @@ export default function NewSubject() {
                         rules={{ required: "Kindly Input" }}
                         name="description"
                         placeholder="Description"
+                      />
+                      <Input
+                        label="Phone Number"
+                        rules={{ required: "Kindly Input" }}
+                        name="phone_number"
+                        placeholder="Phone Number"
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Select
+                        name="customer_type"
+                        label="Type"
+                        rules={{ required: "Select Type" }}
+                      >
+                        <option value="">Select...</option>
+                        <option value="walk_in">Walk In</option>
+                        <option value="call_in">Call In</option>
+                      </Select>
+                      <Input
+                        label="Location"
+                        rules={{ required: "Kindly Input" }}
+                        name="location"
+                        placeholder="Location"
                       />
                     </FormGroup>
 
@@ -181,38 +198,43 @@ export default function NewSubject() {
 }
 
 function ConfirmationPage({ ticket }: { ticket: SubjectFormData }) {
-  const [error, setError] = React.useState<boolean>(false)
+  const [error, setError] = React.useState<boolean>(false);
   const navigate = useNavigate();
-  console.log(ticket)
+  console.log(ticket);
   const handleBackClick = () => {
     navigate("/app/tickets");
   };
   const handleSubmitClick = async () => {
-    console.log(ticket)
-    const sendData = await addNewTicket(ticket)
-    console.log(sendData)
-    if(sendData?.status == 201) {
+    console.log(ticket);
+    const sendData = await addNewTicket(ticket);
+    console.log(sendData);
+    if (sendData?.status == 201) {
       navigate("/app/tickets");
     } else {
-      setError(true)
+      setError(true);
     }
-  }
+  };
 
   return (
     <Container>
       <Section>
         <Header variant="h2">Ticket Summary</Header>
         <TextView title="Title">{ticket?.title}</TextView>
-        <TextView title=" Creator">{ticket?.creator}</TextView>
+        <TextView title=" Customer Name">{ticket?.customer_name}</TextView>
         <TextView title="Date">{ticket?.date}</TextView>
         <TextView title="Status">{ticket?.status}</TextView>
         <TextView title="Description">{ticket?.description}</TextView>
         <TextView title="Category">{ticket?.category}</TextView>
         <TextView title="Priority">{ticket?.priority}</TextView>
+        <TextView title="Phone Number">{ticket?.phone_number}</TextView>
+        <TextView title="location">{ticket?.location}</TextView>
+        <TextView title="Type">{ticket?.customer_type}</TextView>
       </Section>
-      {error && <Section classNames="flex justify-center">
-        <h4 style={{color: 'red'}}>An Error Occurred</h4>
-      </Section>}
+      {error && (
+        <Section classNames="flex justify-center">
+          <h4 style={{ color: "red" }}>An Error Occurred</h4>
+        </Section>
+      )}
       <Section classNames="flex gap-6 justify-end">
         <Button
           classNames="w-25 ml-0"
