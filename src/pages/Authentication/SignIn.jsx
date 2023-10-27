@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import FieldInput from "../../components/FieldInput";
 import PasswordInput from "../../components/PasswordInput";
 import { Button } from "../../components/form";
-import Logo from '../../images/logo/vastLogo.jpeg';
+import Logo from "../../images/logo/vastLogo.jpeg";
+import { setLocalStorageItem } from "../../utils/storage";
+import { loginUser } from "../../api/httpRequest";
 
 export default function SignIn(props) {
   const navigate = useNavigate();
@@ -13,18 +15,28 @@ export default function SignIn(props) {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSignin = (e) => {
+  const handleSignin = async (e) => {
     setError(false);
     e?.preventDefault();
-    if (username != "test@test.com" || password != "Abcd1111") {
-      setError(true);
-      return;
-    } else {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
+    if (username?.length > 3 || password?.length > 3) {
+      const body = {
+        username,
+        password,
+      };
+      const result = await loginUser(body);
+      console.log(result);
+      if (result?.status === 200) {
+        console.log(result?.data?.userDetails._id);
+        setLocalStorageItem({
+          userId: result?.data?.userDetails._id,
+          username: result?.data?.userDetails.username,
+        });
         navigate("/app/tickets");
-      }, 6000);
+      } else {
+        setError(true);
+      }
+    } else {
+      setError(true);
     }
   };
 
@@ -35,7 +47,7 @@ export default function SignIn(props) {
           className="mx-auto h-10 w-auto"
           src={Logo}
           alt="ticket"
-          style={{ width: "100px", height: "100px", borderRadius: '4px ' }}
+          style={{ width: "100px", height: "100px", borderRadius: "4px " }}
         />
         <h2 className="text-gray-900 mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
           Sign in to your account

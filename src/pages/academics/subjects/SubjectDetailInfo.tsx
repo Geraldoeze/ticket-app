@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Header } from "../../../components/container";
 import TextView from "../../../components/textview";
 import { useNavigate } from "react-router-dom";
 import TextViewGroup from "../../../components/textview/TextViewGroup";
 import { ButtonEvent, ButtonEventGroup } from "../../../components/button";
 import { Container, Section } from "../../../components/container";
-import { deleteTicket } from "../../../api/httpRequest";
-
+import {
+  deleteTicket,
+  postMessage,
+  getMessage,
+} from "../../../api/httpRequest";
+import { getLocalStorageItem } from "../../../utils/storage";
 import {
   Button,
   FormGroup,
@@ -23,7 +27,24 @@ export default function SubjectDetailInfo({
 }) {
   const navigate = useNavigate();
   const [comment, setComments] = useState("");
+  const [details, setDetails] = useState();
   const [message, setMessage] = useState([]);
+
+  // get details from localStorage
+  useEffect(() => {
+    const getData = JSON.parse(getLocalStorageItem());
+    setDetails(getData);
+    const fetchmessage = async () => {
+      if (!!getData) {
+        const result = await getMessage(getData?.userId);
+        console.log(result);
+        if (result?.status == 200) {
+          setMessage(result.data.messageData);
+        }
+      }
+    };
+    fetchmessage();
+  }, []);
   const handleDeleteSubject = async (id: string | number) => {
     console.log(id);
 
@@ -35,7 +56,6 @@ export default function SubjectDetailInfo({
       alert("Ticket not deleted.");
     }
   };
-  console.log(data);
 
   // get date
   function getCurrentDateTime() {
@@ -49,14 +69,22 @@ export default function SubjectDetailInfo({
     setComments(e.target.value);
     console.log(comment);
   };
-  const submitComment = () => {
+  const submitComment = async () => {
     const newMessage = {
       date: getCurrentDateTime(),
-      message: comment,
+      comment,
     };
     if (comment?.length > 2) {
       setMessage((prev) => [...prev, newMessage]);
       setComments("");
+      const sendMessage = await postMessage({
+        userId: details?.userId,
+        message: {
+          comment: comment,
+          date: getCurrentDateTime(),
+        },
+      });
+      console.log(message);
     }
   };
   return show ? (
@@ -102,16 +130,17 @@ export default function SubjectDetailInfo({
           <TextView title=""></TextView>
         </TextViewGroup>
       </Section>
-      
+
       {/* Render the messages */}
       <Section>
         <ul>
           {message.map((msg, index) => (
             <li key={index} className="m-5">
               <strong>
-                <span className="mr-3 text-lg"> test@test.com</span> {msg.date}:
+                <span className="mr-3 text-lg"> {details?.username}</span>{" "}
+                {msg.date}:
               </strong>
-              <div>{msg.message}</div>
+              <div>{msg.comment}</div>
             </li>
           ))}
         </ul>

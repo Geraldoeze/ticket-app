@@ -41,3 +41,34 @@ export const deleteTicket = async (id) => {
         return { status: 'error', msg: e?.response?.data?.message || e?.message }
     }
 }
+
+// login
+export const loginUser = async (data) => {
+    let uri = "";
+    try {
+        const uri = `/auth`;
+        return await request.post(uri, data);
+    } catch (e) {
+        return { status: 'error', msg: e?.response?.data?.message || e?.message }
+    }
+}
+
+export const getMessage = async (userId) => {
+    let uri = "";
+    try {
+        const uri = `/message/${userId}`;
+        return await request.get(uri, {});
+    } catch (e) {
+        return { status: 'error', msg: e?.response?.data?.message || e?.message }
+    }
+};
+
+export const postMessage = async (data) => {
+    let uri = "";
+    try {
+        const uri = `/create`;
+        return await request.post(uri, data);
+    } catch (e) {
+        return { status: 'error', msg: e?.response?.data?.message || e?.message }
+    }
+}
