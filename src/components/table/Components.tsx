@@ -261,7 +261,7 @@ export const RowCheckInput: React.FC<RowCheckInputProps> = ({isChecked, onChecke
     checked={isChecked} 
     title="tr-input" 
     type="checkbox" 
-    className="text-blue-500 border-gray-300 rounded cursor-pointer
+    className="text-[#32a544] border-gray-300 rounded cursor-pointer
       dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700 mr-3" 
   />
 ) 
@@ -343,22 +343,22 @@ export const Pagination = ({
                         <ul className="flex flex-wrap items-center gap-2">
                           <li onClick={() => prevPage && Number(prevPage) !== 1 ? onPrevPage(Number(prevPage)) : onPrevPage(1)} className="cursor-pointer datatable-pagination-list-item datatable-hidden datatable-disabled">
                             <a data-page="1" className="datatable-pagination-list-item-link 
-                              rounded bg-[#EDEFF1] py-1.5 px-3 text-xs font-medium text-black hover:bg-[#ff5500] 
-                              hover:text-white dark:text-black dark:hover:bg-[#ff5500] 
+                              rounded bg-[#EDEFF1] py-1.5 px-3 text-xs font-medium text-black hover:bg-[#32a544] 
+                              hover:text-white dark:text-black dark:hover:bg-[#32a544] 
                               dark:hover:text-white">{'‹'}</a>
                           </li>
                             {
                               <li onClick={() => onSelectPage(activePage)}>
                                 <a className="flex items-center justify-center rounded py-0.5 
-                                px-3 font-medium hover:bg-[#ff5500] hover:text-white bg-[#ff5500] text-white">
+                                px-3 font-medium hover:bg-[#32a544] hover:text-white bg-[#32a544] text-white">
                                   {activePage}
                                 </a>
                               </li>
                             }
                           <li onClick={() => nextPage && Number(nextPage) > 1 ? onNextPage(Number(nextPage)) : onNextPage(1)} className="disable cursor-pointer datatable-pagination-list-item">
                             <a data-page="2" className="datatable-pagination-list-item-link rounded bg-[#EDEFF1] 
-                              py-1.5 px-3 text-xs font-medium text-black hover:bg-[#ff5500] 
-                              hover:text-white dark:text-black dark:hover:bg-[#ff5500] 
+                              py-1.5 px-3 text-xs font-medium text-black hover:bg-[#32a544] 
+                              hover:text-white dark:text-black dark:hover:bg-[#32a544] 
                               dark:hover:text-white">{'›'}</a>
                           </li>
                         </ul>

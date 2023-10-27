@@ -26,7 +26,7 @@ export default function Breadcrumb(props:BreadcrumbProps) {
           {
             props?.routes ? props?.routes?.map((p: any, routeIndex: number) => (
               routeIndex + 1 === props?.routes?.length ? (
-                <li className='text-[#ff5500]'>{p?.name}</li>
+                <li className='text-[#32a544]'>{p?.name}</li>
               ) :
               <li className='cursor-pointer' onClick={() => navigate(-1)}>{p?.name} /</li>
             )) : (
@@ -38,7 +38,7 @@ export default function Breadcrumb(props:BreadcrumbProps) {
                     {/* <FaGreaterThan className='body' style={{width: '13px', height: '13px', marginTop: '7px'}}/> */}
                   </Link>
                 </li>
-                <li className='text-[#ff5500]'>{props.pageName}</li>
+                <li className='text-[#32a544]'>{props.pageName}</li>
               </Fragment>
             )
           }

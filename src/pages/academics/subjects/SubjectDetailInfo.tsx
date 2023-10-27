@@ -130,7 +130,7 @@ export default function SubjectDetailInfo({
         <Button
           classNames="w-25 flex justify-end"
           variant="secondary"
-          style={{ background: "#ff5500", color: "#fff" }}
+          style={{ background: "#32a544", color: "#fff" }}
           onClick={submitComment}
           type="button"
           isLoadingText="Saving..."

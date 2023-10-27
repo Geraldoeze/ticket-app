@@ -168,7 +168,7 @@ export default function NewSubject() {
                       <Button
                         classNames="w-25"
                         variant="secondary"
-                        style={{ background: "#ff5500", color: "#fff" }}
+                        style={{ background: "#32a544", color: "#fff" }}
                         onClick={() => navigate(backPath)}
                         type="button"
                         isLoadingText="Saving..."
@@ -177,7 +177,7 @@ export default function NewSubject() {
                       </Button>
                       <Button
                         classNames="w-25"
-                        style={{ background: "#ff5500", color: "#fff" }}
+                        style={{ background: "#32a544", color: "#fff" }}
                         variant="secondary"
                         onClick={() => console.log(methods.formState)}
                         isLoadingText="Creating..."
@@ -238,7 +238,7 @@ function ConfirmationPage({ ticket }: { ticket: SubjectFormData }) {
       <Section classNames="flex gap-6 justify-end">
         <Button
           classNames="w-25 ml-0"
-          style={{ background: "#ff5500", color: "#fff" }}
+          style={{ background: "#32a544", color: "#fff" }}
           variant="primary"
           onClick={handleBackClick}
           type="button"
@@ -247,7 +247,7 @@ function ConfirmationPage({ ticket }: { ticket: SubjectFormData }) {
         </Button>
         <Button
           classNames="w-25 ml-0"
-          style={{ background: "#ff5500", color: "#fff" }}
+          style={{ background: "#32a544", color: "#fff" }}
           variant="primary"
           onClick={handleSubmitClick}
           type="button"

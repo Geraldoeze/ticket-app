@@ -260,6 +260,20 @@ export default function Subjects() {
     autoTable(doc, content);
     doc.save("subject.pdf");
   };
+  const getVariant = (status) => {
+    switch (status) {
+      case "created":
+        return "success";
+      case "pending":
+        return "warning";
+      case "unresolved":
+        return "error";
+      case "resolved":
+        return "primary";
+      default:
+        return "primary";
+    }
+  };
   return (
     <DefaultLayout>
       <BreadCrumb pageName="Ticket" homeRoute="#" homeRouteName="Dashboard" />
@@ -345,10 +359,8 @@ export default function Subjects() {
                 <Table.Cell>{user?.date}</Table.Cell>
                 <Table.Cell>{user?.priority}</Table.Cell>
                 <Table.Cell>{user?.customer_type}</Table.Cell>
-                
-                <Table.StatusCell
-                  variant={user?.status === "active" ? "success" : "primary"}
-                >
+
+                <Table.StatusCell variant={getVariant(user?.status)}>
                   {user?.status}
                 </Table.StatusCell>
               </Table.CellRows>

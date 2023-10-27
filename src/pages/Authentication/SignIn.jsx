@@ -68,7 +68,7 @@ export default function SignIn(props) {
             onTogglePassword={setTogglePassword}
           />
           <Button
-            style={{ background: "#ff5500", color: "#fff" }}
+            style={{ background: "#32a544", color: "#fff" }}
             width="w-[258px]"
             size="lg"
             elevation={1}
