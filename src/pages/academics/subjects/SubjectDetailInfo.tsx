@@ -9,6 +9,7 @@ import {
   deleteTicket,
   postMessage,
   getMessage,
+  statusUpdate,
 } from "../../../api/httpRequest";
 import { getLocalStorageItem } from "../../../utils/storage";
 import {
@@ -28,6 +29,7 @@ export default function SubjectDetailInfo({
   const navigate = useNavigate();
   const [comment, setComments] = useState("");
   const [details, setDetails] = useState();
+  const [updateStatus, setUpdateStatus] = useState("");
   const [message, setMessage] = useState([]);
 
   // get details from localStorage
@@ -44,7 +46,8 @@ export default function SubjectDetailInfo({
       }
     };
     fetchmessage();
-  }, []);
+    setUpdateStatus(data?.status);
+  }, [data?.status]);
   const handleDeleteSubject = async (id: string | number) => {
     console.log(id);
 
@@ -87,14 +90,29 @@ export default function SubjectDetailInfo({
       console.log(message);
     }
   };
+
+  // handle status update
+  const handleStatusUpdate = async (newStatus: string) => {
+    setUpdateStatus(newStatus);
+    try {
+      const send = await statusUpdate({ status: newStatus }, data?._id);
+      console.log(send)
+    } catch (err) {}
+  };
   return show ? (
     <Container>
       <Section>
         <ButtonEventGroup>
-          <ButtonEvent variant="edit" onClick={() => {}}>
+          <ButtonEvent
+            variant="edit"
+            onClick={() => handleStatusUpdate("resolved")}
+          >
             Resolved
           </ButtonEvent>
-          <ButtonEvent variant="edit" onClick={() => {}}>
+          <ButtonEvent
+            variant="edit"
+            onClick={() => handleStatusUpdate("unresolved")}
+          >
             Unresolved
           </ButtonEvent>
           <ButtonEvent
@@ -115,7 +133,7 @@ export default function SubjectDetailInfo({
         </TextViewGroup>
         <TextViewGroup>
           <TextView title="Date">{data?.date}</TextView>
-          <TextView title="Status">{data?.status}</TextView>
+          <TextView title="Status">{updateStatus}</TextView>
         </TextViewGroup>
         <TextViewGroup>
           <TextView title="Priority">{data?.priority}</TextView>

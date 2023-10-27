@@ -14,7 +14,7 @@ import { Container, Header, Section } from "../../../components/container";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Select from "../../../components/form/customSelect";
-import { addNewTicket } from "../../../api/httpRequest";
+import { addNewTicket, statusUpdate } from "../../../api/httpRequest";
 
 import SelectField, {
   SelectFieldOption,
@@ -35,7 +35,6 @@ type SubjectFormData = {
   customer_type: string;
   phone_number: string;
   location: string;
-
 };
 
 export default function NewSubject() {
@@ -209,6 +208,7 @@ function ConfirmationPage({ ticket }: { ticket: SubjectFormData }) {
     const sendData = await addNewTicket(ticket);
     console.log(sendData);
     if (sendData?.status == 201) {
+      statusUpdate(sendData?.data?.response?.insertedId);
       navigate("/app/tickets");
     } else {
       setError(true);

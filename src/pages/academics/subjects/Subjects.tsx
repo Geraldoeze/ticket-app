@@ -155,8 +155,8 @@ export default function Subjects() {
   //   ],
   //   []
   // );
-  const [pageLimit, setPageLimit] = React.useState<string | number>(50);
-  const [page, setPage] = React.useState<string | number>(13);
+  const [pageLimit, setPageLimit] = React.useState<string | number>(10);
+  const [page, setPage] = React.useState<string | number>(1);
   const [singleSelect, setSingleSelect] = React.useState<string>("");
   const [multiSelect, setMultiSelect] = React.useState<string[]>([]);
   const [search, setSearch] = React.useState<string>("");
