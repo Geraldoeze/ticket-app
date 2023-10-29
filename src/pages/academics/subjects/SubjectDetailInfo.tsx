@@ -11,43 +11,33 @@ import {
   getMessage,
   statusUpdate,
 } from "../../../api/httpRequest";
-import { getLocalStorageItem } from "../../../utils/storage";
-import {
-  Button,
-  FormGroup,
-  Textarea,
-  Input,
-  TextArea,
-} from "../../../components/form";
+import { Button } from "../../../components/form";
 export default function SubjectDetailInfo({
   data,
+  userInfo,
   show,
 }: {
+  userInfo: object;
   data: any;
   show: boolean;
 }) {
   const navigate = useNavigate();
   const [comment, setComments] = useState("");
-  const [details, setDetails] = useState();
   const [updateStatus, setUpdateStatus] = useState("");
   const [message, setMessage] = useState([]);
 
-  // get details from localStorage
   useEffect(() => {
-    const getData = JSON.parse(getLocalStorageItem());
-    setDetails(getData);
     const fetchmessage = async () => {
-      if (!!getData) {
-        const result = await getMessage(getData?.userId);
-        console.log(result);
-        if (result?.status == 200) {
-          setMessage(result.data.messageData);
-        }
+      const result = await getMessage(userInfo?.userId);
+      console.log(result);
+      if (result?.status == 200) {
+        setMessage(result.data.messageData);
       }
     };
+
     fetchmessage();
     setUpdateStatus(data?.status);
-  }, [data?.status]);
+  }, []);
   const handleDeleteSubject = async (id: string | number) => {
     console.log(id);
 
@@ -68,7 +58,7 @@ export default function SubjectDetailInfo({
     return `${date} ${time}`;
   }
 
-  const handleComments = (e) => {
+  const handleComments = (e: Event) => {
     setComments(e.target.value);
     console.log(comment);
   };
@@ -81,13 +71,13 @@ export default function SubjectDetailInfo({
       setMessage((prev) => [...prev, newMessage]);
       setComments("");
       const sendMessage = await postMessage({
-        userId: details?.userId,
+        userId: userInfo?.userId,
         message: {
           comment: comment,
           date: getCurrentDateTime(),
         },
       });
-      console.log(message);
+      console.log(sendMessage);
     }
   };
 
@@ -96,7 +86,7 @@ export default function SubjectDetailInfo({
     setUpdateStatus(newStatus);
     try {
       const send = await statusUpdate({ status: newStatus }, data?._id);
-      console.log(send)
+      console.log(send);
     } catch (err) {}
   };
   return show ? (
@@ -105,13 +95,13 @@ export default function SubjectDetailInfo({
         <ButtonEventGroup>
           <ButtonEvent
             variant="edit"
-            onClick={() => handleStatusUpdate("resolved")}
+            onClick={() => handleStatusUpdate("completed")}
           >
             Resolved
           </ButtonEvent>
           <ButtonEvent
             variant="edit"
-            onClick={() => handleStatusUpdate("unresolved")}
+            onClick={() => handleStatusUpdate("uncompleted")}
           >
             Unresolved
           </ButtonEvent>
@@ -125,26 +115,32 @@ export default function SubjectDetailInfo({
         <Header variant="h2">Subject Informtion</Header>
         <TextViewGroup>
           <TextView title="ID">{data?._id}</TextView>
-          <TextView title="Title">{data?.title}</TextView>
+          <TextView title="Customer Name">{data?.customer_name}</TextView>
         </TextViewGroup>
         <TextViewGroup>
-          <TextView title="Customer Name">{data?.customer_name}</TextView>
+          <TextView title="Country">{data?.country}</TextView>
           <TextView title="Phone Number">{data?.phone_number}</TextView>
+        </TextViewGroup>
+        <TextViewGroup>
+          <TextView title="State">{data?.state}</TextView>
+          <TextView title="City">{data?.city}</TextView>
         </TextViewGroup>
         <TextViewGroup>
           <TextView title="Date">{data?.date}</TextView>
           <TextView title="Status">{updateStatus}</TextView>
         </TextViewGroup>
         <TextViewGroup>
-          <TextView title="Priority">{data?.priority}</TextView>
-          <TextView title="Category">{data?.category} </TextView>
+          <TextView title="Communication Mode">
+            {data?.communication_mode}
+          </TextView>
+          <TextView title="Transfer Mode">{data?.transfer_mode} </TextView>
         </TextViewGroup>
         <TextViewGroup>
-          <TextView title="Type">{data?.customer_type}</TextView>
+          <TextView title="Request Action">{data?.action_request}</TextView>
           <TextView title="Description">{data?.description}</TextView>
         </TextViewGroup>
         <TextViewGroup>
-          <TextView title="Location">{data?.location}</TextView>
+          <TextView title="Customer Request">{data?.customer_request?.map(val => val + "," + " ")}</TextView>
           <TextView title=""></TextView>
         </TextViewGroup>
       </Section>
@@ -155,7 +151,7 @@ export default function SubjectDetailInfo({
           {message.map((msg, index) => (
             <li key={index} className="m-5">
               <strong>
-                <span className="mr-3 text-lg"> {details?.username}</span>{" "}
+                <span className="mr-3 text-lg"> {userInfo?.username}</span>{" "}
                 {msg.date}:
               </strong>
               <div>{msg.comment}</div>

@@ -1,10 +1,10 @@
 import axios from "axios";
 import request from "../utils/http-request";
 
-export const getTickets = async () => {
+export const getTickets = async (userId) => {
   let uri = "";
   try {
-    const uri = `/`;
+    const uri = `/${userId}`;
     return await request.get(uri, {});
   } catch (e) {
     return { status: "error", msg: e?.response?.data?.message || e?.message };

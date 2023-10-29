@@ -4,28 +4,35 @@ import BreadCrumb from "../../../components/BreadCrumb";
 import Tabs, { Tab } from "../../../components/tabs";
 import Icons from "../../../layout/navIcons";
 import SubjectDetailInfo from "./SubjectDetailInfo";
-import { getTicket } from "../../../api/httpRequest";
+import { getTicket, getMessage } from "../../../api/httpRequest";
+import { getLocalStorageItem } from "../../../utils/storage";
 
 const tabIconStyle = { marginTop: "5px", marginRight: "5px" };
 
 export default function Subject() {
   const [tab, setTab] = React.useState<string>("Details");
-  const [data, setData] = React.useState<[]>([]);
+  const [data, setData] = React.useState<{}>({});
+  
   const id = window.location.pathname.split("/");
   const ticketId = id[id.length - 1];
+  
+  const userInfo = JSON.parse(getLocalStorageItem());
+  
   useEffect(() => {
+    
+    
     const fetchData = async () => {
-      const getData = await getTicket(ticketId);
-    // const getData = await fetch(`http://localhost:7000/ticket/fetch/${ticketId}`)
-      console.log(getData);
-      setData(getData?.data?.response)
+      const getDetails = await getTicket(ticketId);
+      console.log(getDetails);
+      setData(getDetails?.data?.response)
     };
     if (ticketId?.length > 4) {
       console.log(ticketId);
       fetchData();
     }
   }, []);
-
+    
+  
   return (
     <DefaultLayout>
       <BreadCrumb
@@ -46,7 +53,7 @@ export default function Subject() {
             </Tabs> */}
 
       {/* Render Components */}
-      {!!data && <SubjectDetailInfo show={tab === "Details"} data={data} />}
+      {!!data && <SubjectDetailInfo  userInfo={userInfo} show={tab === "Details"} data={data} />}
     </DefaultLayout>
   );
 }

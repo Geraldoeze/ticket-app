@@ -1,5 +1,10 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import SignIn from "./pages/Authentication/SignIn";
 import SignUp from "./pages/Authentication/SignUp";
 import SignupStepTwo from "./pages/Authentication/SignupStepTwo";
@@ -11,13 +16,14 @@ import Teacher from "./pages/users/teacher/Teacher";
 import NewTeacher from "./pages/users/teacher/NewTeacher";
 import TemplateRouter from "./pages/template";
 import Parents from "../src/pages/users/parent/parents";
-import EmployeeRoutePages from './pages/users/employee';
-import StudentRoutePages from './pages/users/student';
-import SubjectsRoutePages from './pages/academics/subjects';
-import ClassesRoutePages from './pages/academics/classes';
-import QuestionsRoutePages from './pages/academics/questions';
-import EvaluationsRoutePages from './pages/academics/evaluations';
+import EmployeeRoutePages from "./pages/users/employee";
+import StudentRoutePages from "./pages/users/student";
+import SubjectsRoutePages from "./pages/academics/subjects";
+import ClassesRoutePages from "./pages/academics/classes";
+import QuestionsRoutePages from "./pages/academics/questions";
+import EvaluationsRoutePages from "./pages/academics/evaluations";
 import { ROUTES_CONFIG } from "./layout/config";
+import AuthGuard from "./utils/authGuard";
 
 import Payments from "./pages/burser/accounts/expenditures/Payments/Payments";
 import AddPayments from "./pages/burser/accounts/expenditures/Payments/AddPayments";
@@ -81,7 +87,7 @@ const App = () => {
     <Fragment>
       <Router>
         <Routes>
-          <Route exact path="/" element={<SignIn  />} />
+          <Route exact path="/" element={<SignIn />} />
           <Route path="auth" element={<RouteLayout />}>
             <Route path="signup" element={<SignUp />} />
             {/* <Route path="steptwo" element={<SignupStepTwo />} /> */}
@@ -89,7 +95,7 @@ const App = () => {
             {/* <Route path="signin" element={<SignIn />} /> */}
             <Route index element={<SignIn />} />
           </Route>
-          
+
           <Route path="app" element={<RouteLayout />}>
             {/* Template Pages */}
             {/* <Route path="templates" element={<RouteLayout />}>
@@ -121,12 +127,33 @@ const App = () => {
               <Route index element={<StudentRoutePages.Students />} />
             </Route> */}
 
-            <Route path={ROUTES_CONFIG.admin.entities.tickets} element={<RouteLayout />}>
-              <Route path="tickets" element={<SubjectsRoutePages.Subjects />} />
-              <Route path="new" element={<SubjectsRoutePages.NewSubject />} />
-              <Route path=":ticketId" element={<SubjectsRoutePages.Subject />} />
+            <Route
+              path={ROUTES_CONFIG.admin.entities.tickets}
+              element={<AuthGuard><RouteLayout /></AuthGuard>}
+            >
+              <Route
+                path="tickets"
+                element={
+                  <AuthGuard>
+                    <SubjectsRoutePages.Subjects />
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="new"
+                element={
+                  <AuthGuard>
+                    <SubjectsRoutePages.NewSubject />{" "}
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path=":ticketId"
+                element={<SubjectsRoutePages.Subject />}
+              />
               <Route index element={<SubjectsRoutePages.Subjects />} />
             </Route>
+            {/* <Route path='/protected-page' element={<AuthGuard requireToken={true}><h1>ProtectedPage</h1></AuthGuard>} /> */}
 
             {/* <Route path={ROUTES_CONFIG.admin.entities.classes} element={<RouteLayout />}>
               <Route path="classes" element={<ClassesRoutePages.Classes />} />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DefaultLayout from "../../../layout/DefaultLayout";
 import BreadCrumb from "../../../components/BreadCrumb";
 import TextView from "../../../components/textview";
@@ -8,6 +8,7 @@ import {
   Textarea,
   Input,
   TextArea,
+  Checkbox,
 } from "../../../components/form";
 import FieldInput from "../../../components/FieldInput";
 import { Container, Header, Section } from "../../../components/container";
@@ -15,42 +16,78 @@ import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Select from "../../../components/form/customSelect";
 import { addNewTicket, statusUpdate } from "../../../api/httpRequest";
-
+import CheckboxGroup from "./Chech";
 import SelectField, {
   SelectFieldOption,
 } from "../../../components/SelectField";
 import { ROUTES_CONFIG } from "../../../layout/config";
-import useState from "react";
-
+import { getLocalStorageItem } from "../../../utils/storage";
+import data from "../../../data/countries.json";
 type SubjectFormData = {
-  title: string;
   customer_name: string;
   date: string;
-  priority: string;
   result: string;
   description: string;
+  action_request: string;
   category: string;
   status: string;
   amount: string;
-  customer_type: string;
+  communication_mode: string;
   phone_number: string;
-  location: string;
+  country: string;
+  state: string;
+  city: string;
+  transfer_mode: string;
+  request_others: string;
 };
 
 export default function NewSubject() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const navigate = useNavigate();
   const [ticket, setTicket] = React.useState<any>({
-    title: "",
-    creator: "",
+    country: "",
+    state: "",
+    city: "",
     date: "",
     priority: "",
     result: "",
     description: "",
-    category: "",
+    transfer_mode: "",
     status: "created",
   });
   const [showConfirmation, setShowConfirmation] = React.useState(false);
+  const [invalid, setInvalid] = React.useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<any>([]);
+  const [logisticsOptions, setLogisticsOptions] = useState<any>([]);
+  const [drugInfoOptions, setDrugInfoOptions] = useState<any>([]);
+  const [otherInput, setOtherInput] = useState({
+    transfer_mode: false,
+    customer_request: false,
+    action_request: false,
+  });
+
+  const options = [
+    "Stock Availability",
+    "Price / Quotation",
+    "Order Placement",
+    "List of Ordered Products",
+    "Value of Ordered Products",
+    "Value of Order",
+    "Others",
+  ];
+  const option = {
+    Logistics: [
+      "Station of Delivery",
+      "Availability of Service",
+      "Cost of Delivery",
+    ],
+    "Drug Information": [
+      "Available Brand or Substitute",
+      "Indication",
+      "Strength",
+      "Pack Size",
+    ],
+  };
   const methods = useForm<SubjectFormData>();
 
   const onSubmit = (data: SubjectFormData) => {
@@ -72,10 +109,76 @@ export default function NewSubject() {
       status: "created",
       date: new Date().toLocaleDateString(),
     });
+
     setShowConfirmation(true);
   };
 
+  const handleCheckboxChange = (option: any[]) => {
+    // Check if the option is already in the selectedOptions array
+    if (option == "Others") {
+      setOtherInput((prev) => ({
+        ...prev,
+        customer_request: !otherInput.customer_request,
+      }));
+    }
+    if (selectedOptions.includes(option)) {
+      setSelectedOptions(selectedOptions.filter((item) => item !== option));
+    } else {
+      // Add the option to selectedOptions
+      setSelectedOptions([...selectedOptions, option]);
+    }
+  };
+
+  const handleCheckboxChangeTwo = (category, option) => {
+    if (category === "Logistics") {
+      // Check if the option is already in logisticsOptions
+      if (logisticsOptions.includes(option)) {
+        setLogisticsOptions(logisticsOptions.filter((item) => item !== option));
+      } else {
+        setLogisticsOptions([...logisticsOptions, option]);
+      }
+    } else if (category === "Drug Information") {
+      // Check if the option is already in drugInfoOptions
+      if (drugInfoOptions.includes(option)) {
+        setDrugInfoOptions(drugInfoOptions.filter((item) => item !== option));
+      } else {
+        setDrugInfoOptions([...drugInfoOptions, option]);
+      }
+    }
+  };
+
+  const handleOthers = (e: any, value: string) => {
+    console.log(e, value);
+    if (e == "Other") {
+      if (value == "transfer_mode") {
+        setOtherInput((prev) => ({
+          ...prev,
+          transfer_mode: !otherInput?.transfer_mode,
+        }));
+      }
+      if (value == "action_request") {
+        setOtherInput((prev) => ({
+          ...prev,
+          action_request: !otherInput?.action_request,
+        }));
+      }
+    } else {
+      if (value == "transfer_mode") {
+        setOtherInput((prev) => ({
+          ...prev,
+          transfer_mode: false,
+        }));
+      }
+      if (value == "action_request") {
+        setOtherInput((prev) => ({
+          ...prev,
+          action_request: false,
+        }));
+      }
+    }
+  };
   const backPath = "/app/tickets";
+  console.log(ticket);
   return (
     <DefaultLayout>
       <BreadCrumb
@@ -89,77 +192,190 @@ export default function NewSubject() {
             <div className="col-span-5 xl:col-span-3">
               <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 {showConfirmation ? (
-                  <ConfirmationPage ticket={ticket} />
+                  <ConfirmationPage
+                    ticket={ticket}
+                    selectedOptions={selectedOptions}
+                    drugInfoOptions={drugInfoOptions}
+                    logisticsOptions={logisticsOptions}
+                  />
                 ) : (
                   <div className="p-7">
                     <Header variant="h2">Ticket Informtion</Header>
                     <FormGroup>
-                      <Input
-                        label="Title"
-                        name="title"
-                        placeholder="Ticket Title"
-                        rules={{ required: "Title is required" }}
-                      />
                       <Input
                         label="Customer Name"
                         name="customer_name"
                         placeholder="Name"
                         rules={{ required: "Name is required" }}
                       />
+                      <Select
+                        name="country"
+                        label="Country"
+                        rules={{ required: "Select Country" }}
+                      >
+                        <option value="">Select...</option>
+                        {data?.map((val, id) => (
+                          <option value={val.name} key={val.code}>
+                            {val.name}
+                          </option>
+                        ))}
+                      </Select>
                     </FormGroup>
                     <FormGroup>
-                      <Select
-                        name="category"
-                        label="Category"
-                        rules={{ required: "Select Category" }}
-                      >
-                        <option value="">Select...</option>
-                        <option value="Transactions">Transactions</option>
-                        <option value="Billing">Billing</option>
-                        <option value="Inquiry">Inquiry</option>
-                      </Select>
-                      <Select
-                        name="priority"
-                        label="Priority"
-                        rules={{ required: "Select Priority" }}
-                      >
-                        <option value="">Select...</option>
-                        <option value="high">High</option>
-                        <option value="medium">Medium</option>
-                        <option value="low">Low</option>
-                      </Select>
+                      <Input
+                        label="State/Province"
+                        name="state"
+                        placeholder="Type State"
+                        rules={{ required: "State is required" }}
+                      />
+                      <Input
+                        label="City"
+                        name="city"
+                        placeholder="Type City"
+                        rules={{ required: "City is required" }}
+                      />
                     </FormGroup>
-
+                    <FormGroup>
+                      <div className="w-full md:w-1/2">
+                        <Select
+                          name="communication_mode"
+                          label="Communication Mode"
+                          classNames="w-1/2"
+                          rules={{ required: "Select mode" }}
+                        >
+                          <option value="">Select...</option>
+                          <option value="Calls">Calls</option>
+                          <option value="WhatsApp">WhatsApp</option>
+                          <option value="Email">Email</option>
+                          <option value="Walk In">Walk In</option>
+                        </Select>
+                      </div>
+                      <div className="w-full md:w-1/2">
+                        <Select
+                          name="transfer_mode"
+                          label="Mode of Transfer"
+                          rules={{ required: "Select Transfer mode" }}
+                          onChange={(e) => handleOthers(e, "transfer_mode")}
+                        >
+                          <option value="">Select...</option>
+                          <option value="CRM">CRM</option>
+                          <option value="Physical Submission">
+                            Physical Submission
+                          </option>
+                          <option value="WhatsApp">WhatsApp</option>
+                          <option value="Email">Email</option>
+                          <option value="Calls">Calls</option>
+                          <option value="Other">Other</option>
+                        </Select>
+                        {otherInput?.transfer_mode && (
+                          <Input
+                            label="Others"
+                            name="transfer_others"
+                            placeholder="Type Others"
+                          />
+                        )}
+                      </div>
+                    </FormGroup>
+                    <div className="my-8">
+                      <h2 className="my-2 text-center text-lg font-semibold">
+                        Customer’s Request (Tick as Applicable)
+                      </h2>
+                      <div className="mb-4 flex w-full flex-wrap gap-4">
+                        {options.map((option) => (
+                          <label key={option} className="mx-4 ">
+                            <input
+                              type="checkbox"
+                              value={option}
+                              style={{ margin: "0 6px" }}
+                              checked={selectedOptions.includes(option)}
+                              onChange={() => handleCheckboxChange(option)}
+                            />
+                            {option}
+                          </label>
+                        ))}
+                      </div>
+                      <div className="mb-3 flex w-full flex-wrap gap-4 ">
+                        {Object.entries(option).map(
+                          ([category, categoryOptions]) => (
+                            <div key={category} className="">
+                              <h3>{category}</h3>
+                              {categoryOptions.map((option) => (
+                                <label key={option} className="mx-4 ">
+                                  <input
+                                    type="checkbox"
+                                    style={{ margin: "0 6px" }}
+                                    value={option}
+                                    checked={
+                                      category === "Logistics"
+                                        ? logisticsOptions.includes(option)
+                                        : drugInfoOptions.includes(option)
+                                    }
+                                    onChange={() =>
+                                      handleCheckboxChangeTwo(category, option)
+                                    }
+                                  />
+                                  {option}
+                                </label>
+                              ))}
+                            </div>
+                          )
+                        )}
+                      </div>
+                      {otherInput?.customer_request && (
+                        <Input
+                          label="Others"
+                          name="request_others"
+                          placeholder="Type Others"
+                        />
+                      )}
+                      {invalid && (
+                        <h2
+                          className="text-center text-sm"
+                          style={{ color: "red" }}
+                        >
+                          Kindly Select One
+                        </h2>
+                      )}
+                    </div>
+                    <FormGroup>
+                      <div className="w-full md:w-1/2">
+                        <Select
+                          name="action_request"
+                          label="Action Request"
+                          onChange={(e) => handleOthers(e, "action_request")}
+                          rules={{ required: "Select Action request" }}
+                        >
+                          <option value="">Select...</option>
+                          <option value="Sales">Sales</option>
+                          <option value=" Finance">Finance</option>
+                          <option value="Procurement">Procurement</option>
+                          <option value="Administration">Administration</option>
+                          <option value="Logistics">Logistics</option>
+                          <option value="Other">Other</option>
+                        </Select>
+                        {otherInput?.action_request && (
+                          <Input
+                            label="Others"
+                            name=""
+                            placeholder="Type Others"
+                          />
+                        )}
+                      </div>
+                      <div className="w-full md:w-1/2">
+                        <Input
+                          label="Phone Number"
+                          rules={{ required: "Kindly Input" }}
+                          name="phone_number"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                    </FormGroup>
                     <FormGroup>
                       <Textarea
                         label="Description"
                         rules={{ required: "Kindly Input" }}
                         name="description"
                         placeholder="Description"
-                      />
-                      <Input
-                        label="Phone Number"
-                        rules={{ required: "Kindly Input" }}
-                        name="phone_number"
-                        placeholder="Phone Number"
-                      />
-                    </FormGroup>
-
-                    <FormGroup>
-                      <Select
-                        name="customer_type"
-                        label="Type"
-                        rules={{ required: "Select Type" }}
-                      >
-                        <option value="">Select...</option>
-                        <option value="Walk In">Walk In</option>
-                        <option value="Call In">Call In</option>
-                      </Select>
-                      <Input
-                        label="Location"
-                        rules={{ required: "Kindly Input" }}
-                        name="location"
-                        placeholder="Location"
                       />
                     </FormGroup>
 
@@ -196,19 +412,44 @@ export default function NewSubject() {
   );
 }
 
-function ConfirmationPage({ ticket }: { ticket: SubjectFormData }) {
+function ConfirmationPage({
+  ticket,
+
+  selectedOptions,
+  drugInfoOptions,
+  logisticsOptions,
+}: {
+  drugInfoOptions: [];
+
+  ticket: SubjectFormData;
+  logisticsOptions: [];
+  selectedOptions: [];
+}) {
   const [error, setError] = React.useState<boolean>(false);
+
   const navigate = useNavigate();
-  console.log(ticket);
+
+  const getData = JSON.parse(getLocalStorageItem());
+  const userId = getData.userId;
+  console.log(userId);
+  const combinedArray = [].concat(
+    logisticsOptions,
+    selectedOptions,
+    drugInfoOptions
+  );
+  if (ticket?.request_others) {
+    combinedArray.push(ticket?.request_others);
+  }
   const handleBackClick = () => {
-    navigate("/app/tickets");
+    navigate("/app/tickets/new");
   };
   const handleSubmitClick = async () => {
-    console.log(ticket);
-    const sendData = await addNewTicket(ticket);
+    const send = { ...ticket, userId, customer_request: combinedArray };
+    console.log(send);
+    const sendData = await addNewTicket(send);
     console.log(sendData);
     if (sendData?.status == 201) {
-      statusUpdate(sendData?.data?.response?.insertedId);
+    //   statusUpdate(sendData?.data?.response?.insertedId);
       navigate("/app/tickets");
     } else {
       setError(true);
@@ -219,16 +460,52 @@ function ConfirmationPage({ ticket }: { ticket: SubjectFormData }) {
     <Container>
       <Section>
         <Header variant="h2">Ticket Summary</Header>
-        <TextView title="Title">{ticket?.title}</TextView>
-        <TextView title=" Customer Name">{ticket?.customer_name}</TextView>
+        <TextView title="Customer Name">{ticket?.customer_name}</TextView>
+        <TextView title="Country">{ticket?.country}</TextView>
+        <TextView title="State">{ticket?.state}</TextView>
+        <TextView title="City">{ticket?.city}</TextView>
+        <TextView title="Action Request">{ticket?.action_request}</TextView>
         <TextView title="Date">{ticket?.date}</TextView>
         <TextView title="Status">{ticket?.status}</TextView>
         <TextView title="Description">{ticket?.description}</TextView>
-        <TextView title="Category">{ticket?.category}</TextView>
-        <TextView title="Priority">{ticket?.priority}</TextView>
+        <TextView title="Transfer Mode">{ticket?.transfer_mode}</TextView>
         <TextView title="Phone Number">{ticket?.phone_number}</TextView>
-        <TextView title="location">{ticket?.location}</TextView>
-        <TextView title="Type">{ticket?.customer_type}</TextView>
+
+        <TextView title="Communication Mode">
+          {ticket?.communication_mode}
+        </TextView>
+        <TextView title="Customer's Request">
+          {selectedOptions?.map((val, id) => (
+            <span key={id}>
+              {val}
+              <br />{" "}
+            </span>
+          ))}{" "}
+          {logisticsOptions?.length >= 1 && (
+            <p>
+              Logistics:{" "}
+              {logisticsOptions?.map((val, id) => (
+                <span key={id}>
+                  {val}
+                  <br />
+                </span>
+              ))}{" "}
+            </p>
+          )}{" "}
+          {drugInfoOptions?.length >= 1 && (
+            <p>
+              Drug Information:{" "}
+              {drugInfoOptions?.map((val, id) => (
+                <span key={id}>
+                  {val}
+                  <br />
+                </span>
+              ))}
+            </p>
+          )}
+          {!!ticket?.request_others && ticket?.request_others}
+          {""}
+        </TextView>
       </Section>
       {error && (
         <Section classNames="flex justify-center">
@@ -258,57 +535,3 @@ function ConfirmationPage({ ticket }: { ticket: SubjectFormData }) {
     </Container>
   );
 }
-
-/**
- * 
-ID
-Name
-User Type(school(admin & Support), student, staff, parent, support, third party)
-Password
-Username
-Login as
-Token
-Refresh Token
-Last Login Time
-Access Level
-Privileges [{resouce_name: [read, write, all], 
-Status(unverified, verified, transfered, suspended, deleted)
-
-
-Teacher
-Teacher ID
-User (Ref)
-First Name
-Middle Name
-Last Name
-Gender
-Date of Birth(dob)
-State(Region)
-Country
-Admission Date
-Email
-Phone Number
-Class(grade)
-Address
-Photo
-Emergency Contact
-Physician Contact
-
-Other Fields added by school
-Religion
-Race
-Ethnicity
-Local Government Area
-Section
-
-Allergies
-Medications
-Treatments
-Disabilities
-Sport Participation Approvals
-Exemption Conditions
-Other Conditions
-Emergency Medical Permissions
-
-
- */

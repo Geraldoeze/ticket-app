@@ -1,5 +1,5 @@
 {
-  "name": "uweruschool",
+  "name": "",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "author": {
-    "name": "Uweru School",
+    "name": "",
     "email": "support@uweru.com",
     "url": "https://school.uweru.com"
   },

@@ -9,15 +9,9 @@ import {
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [details, setDetails] = useState({});
   const trigger = useRef(null);
   const dropdown = useRef(null);
-
-  // get details from localStorage
-  useEffect(() => {
-    const getData = JSON.parse(getLocalStorageItem());
-    setDetails(getData);
-  }, []);
+  const details = JSON.parse(getLocalStorageItem());
 
   // close on click outside
   useEffect(() => {
@@ -51,7 +45,6 @@ const DropdownUser = () => {
     clearItemFromLocalStorage();
     navigate("/");
   };
-  console.log(details);
   return (
     <div className="relative">
       <Link
@@ -64,7 +57,7 @@ const DropdownUser = () => {
           <span className="block text-sm font-medium text-black dark:text-white">
             {details?.username}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          
         </span>
 
         <span className="h-12 w-12 rounded-full">

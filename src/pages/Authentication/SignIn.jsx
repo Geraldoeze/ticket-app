@@ -17,6 +17,7 @@ export default function SignIn(props) {
 
   const handleSignin = async (e) => {
     setError(false);
+    setLoading(true)
     e?.preventDefault();
     if (username?.length > 3 || password?.length > 3) {
       const body = {
@@ -34,9 +35,11 @@ export default function SignIn(props) {
         navigate("/app/tickets");
       } else {
         setError(true);
+        setLoading(false)
       }
     } else {
       setError(true);
+      setLoading(false)
     }
   };
 
