@@ -11,7 +11,7 @@ export default function SignIn(props) {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [togglePassword, setTogglePassword] = useState(true);
+  const [togglePassword, setTogglePassword] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
