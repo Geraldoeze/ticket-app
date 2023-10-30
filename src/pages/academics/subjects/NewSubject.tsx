@@ -276,67 +276,7 @@ export default function NewSubject() {
                         )}
                       </div>
                     </FormGroup>
-                    <div className="my-8">
-                      <h2 className="my-2 text-center text-lg font-semibold">
-                        Customer’s Request (Tick as Applicable)
-                      </h2>
-                      <div className="mb-4 flex w-full flex-wrap gap-4">
-                        {options.map((option) => (
-                          <label key={option} className="mx-4 ">
-                            <input
-                              type="checkbox"
-                              value={option}
-                              style={{ margin: "0 6px" }}
-                              checked={selectedOptions.includes(option)}
-                              onChange={() => handleCheckboxChange(option)}
-                            />
-                            {option}
-                          </label>
-                        ))}
-                      </div>
-                      <div className="mb-3 flex w-full flex-wrap gap-4 ">
-                        {Object.entries(option).map(
-                          ([category, categoryOptions]) => (
-                            <div key={category} className="">
-                              <h3>{category}</h3>
-                              {categoryOptions.map((option) => (
-                                <label key={option} className="mx-4 ">
-                                  <input
-                                    type="checkbox"
-                                    style={{ margin: "0 6px" }}
-                                    value={option}
-                                    checked={
-                                      category === "Logistics"
-                                        ? logisticsOptions.includes(option)
-                                        : drugInfoOptions.includes(option)
-                                    }
-                                    onChange={() =>
-                                      handleCheckboxChangeTwo(category, option)
-                                    }
-                                  />
-                                  {option}
-                                </label>
-                              ))}
-                            </div>
-                          )
-                        )}
-                      </div>
-                      {otherInput?.customer_request && (
-                        <Input
-                          label="Others"
-                          name="request_others"
-                          placeholder="Type Others"
-                        />
-                      )}
-                      {invalid && (
-                        <h2
-                          className="text-center text-sm"
-                          style={{ color: "red" }}
-                        >
-                          Kindly Select One
-                        </h2>
-                      )}
-                    </div>
+
                     <FormGroup>
                       <div className="w-full md:w-1/2">
                         <Select
@@ -378,6 +318,67 @@ export default function NewSubject() {
                         placeholder="Description"
                       />
                     </FormGroup>
+                    <div className="my-8">
+                      <h2 className="my-2 text-center text-lg font-semibold">
+                        Customer’s Request (Tick as Applicable)
+                      </h2>
+                      <div className="mb-4 block">
+                        {options.map((option) => (
+                          <label key={option} className="mx-4 block">
+                            <input
+                              type="checkbox"
+                              value={option}
+                              style={{ margin: "0 6px" }}
+                              checked={selectedOptions.includes(option)}
+                              onChange={() => handleCheckboxChange(option)}
+                            />
+                            {option}
+                          </label>
+                        ))}
+                      </div>
+                      <div className="mb-3 block">
+                        {Object.entries(option).map(
+                          ([category, categoryOptions]) => (
+                            <div key={category} className="flex flex-col">
+                              <h3>{category}</h3>
+                              {categoryOptions.map((option) => (
+                                <label key={option} className="mx-4 min-w-[50px]">
+                                  <input
+                                    type="checkbox"
+                                    style={{ margin: "0 6px" }}
+                                    value={option}
+                                    checked={
+                                      category === "Logistics"
+                                        ? logisticsOptions.includes(option)
+                                        : drugInfoOptions.includes(option)
+                                    }
+                                    onChange={() =>
+                                      handleCheckboxChangeTwo(category, option)
+                                    }
+                                  />
+                                  {option}
+                                </label>
+                              ))}
+                            </div>
+                          )
+                        )}
+                      </div>
+                      {otherInput?.customer_request && (
+                        <Input
+                          label="Others"
+                          name="request_others"
+                          placeholder="Type Others"
+                        />
+                      )}
+                      {invalid && (
+                        <h2
+                          className="text-center text-sm"
+                          style={{ color: "red" }}
+                        >
+                          Kindly Select One
+                        </h2>
+                      )}
+                    </div>
 
                     <Section classNames="flex gap-6 justify-end">
                       <Button
@@ -449,7 +450,7 @@ function ConfirmationPage({
     const sendData = await addNewTicket(send);
     console.log(sendData);
     if (sendData?.status == 201) {
-    //   statusUpdate(sendData?.data?.response?.insertedId);
+      //   statusUpdate(sendData?.data?.response?.insertedId);
       navigate("/app/tickets");
     } else {
       setError(true);

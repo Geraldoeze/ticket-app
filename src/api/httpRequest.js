@@ -11,10 +11,10 @@ export const getTickets = async (userId) => {
   }
 };
 
-export const getTicket = async (id) => {
+export const getTicket = async (id, page) => {
   let uri = "";
   try {
-    const uri = `/fetch/${id}`;
+    const uri = `/fetch/${id}?${page}`;
     return await request.get(uri, {});
   } catch (e) {
     return { status: "error", msg: e?.response?.data?.message || e?.message };

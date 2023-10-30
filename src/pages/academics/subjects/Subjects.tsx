@@ -173,7 +173,7 @@ export default function Subjects() {
     const getData = JSON.parse(getLocalStorageItem());
     const getAll = async () => {
       if (!!getData) {
-        const result = await getTickets(getData?.userId);
+        const result = await getTickets(getData?.userId, page);
         console.log(result.data);
         if (result?.status == 200) {
           setCheckData(result?.data?.response);
@@ -380,12 +380,12 @@ export default function Subjects() {
             </Table>
             <Table.Pagination
               show
-              totalPages={200}
+              totalPages={2}
               activePage={Number(page)}
               activeLimit={Number(pageLimit)}
               nextPage={2}
               prevPage={1}
-              pageLimit={[5, 10, 15, 20, 25, 50, 100, 200]}
+              pageLimit={[5, 10, 15, 20, 25]}
               onPrevPage={handlePageChange}
               onNextPage={handlePageChange}
               onSelectPage={handleChangePage}
