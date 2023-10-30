@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import TextViewGroup from "../../../components/textview/TextViewGroup";
 import { ButtonEvent, ButtonEventGroup } from "../../../components/button";
 import { Container, Section } from "../../../components/container";
-import {Loader} from '../../compon'
+import { Loader } from "../../../components/Loader";
 import {
   deleteTicket,
   postMessage,
@@ -141,11 +141,13 @@ export default function SubjectDetailInfo({
           <TextView title="Description">{data?.description}</TextView>
         </TextViewGroup>
         <TextViewGroup>
-          <TextView title="Customer Request">{data?.customer_request?.map(val => val + "," + " ")}</TextView>
+          <TextView title="Customer Request">
+            {data?.customer_request?.map((val) => val + "," + " ")}
+          </TextView>
           <TextView title=""></TextView>
         </TextViewGroup>
       </Section>
-<Loader
+      {/* <Loader show={true} /> */}
       {/* Render the messages */}
       <Section>
         <ul>
