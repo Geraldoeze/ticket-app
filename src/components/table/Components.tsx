@@ -311,7 +311,7 @@ export interface PaginationProps {
   activePage: number;
   show: boolean;
   activeLimit: number;
-  totalPages?: number;
+  totalPages?: number | string;
   onChangeLimit: (limit: string | number) => void;
 }
 

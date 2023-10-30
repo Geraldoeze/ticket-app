@@ -1,20 +1,20 @@
 import axios from "axios";
 import request from "../utils/http-request";
 
-export const getTickets = async (userId) => {
+export const getTickets = async (userId, page, pageLimit) => {
   let uri = "";
   try {
-    const uri = `/${userId}`;
+    const uri = `/${userId}?page=${page}&pageSize=${pageLimit}`;
     return await request.get(uri, {});
   } catch (e) {
     return { status: "error", msg: e?.response?.data?.message || e?.message };
   }
 };
 
-export const getTicket = async (id, page) => {
+export const getTicket = async (id) => {
   let uri = "";
   try {
-    const uri = `/fetch/${id}?${page}`;
+    const uri = `/fetch/${id}`;
     return await request.get(uri, {});
   } catch (e) {
     return { status: "error", msg: e?.response?.data?.message || e?.message };
@@ -52,10 +52,10 @@ export const loginUser = async (data) => {
   }
 };
 
-export const getMessage = async (userId) => {
+export const getMessage = async (ticketId) => {
   let uri = "";
   try {
-    const uri = `/message/${userId}`;
+    const uri = `/message/${ticketId}`;
     return await request.get(uri, {});
   } catch (e) {
     return { status: "error", msg: e?.response?.data?.message || e?.message };

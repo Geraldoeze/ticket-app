@@ -156,8 +156,9 @@ export default function Subjects() {
   //   ],
   //   []
   // );
-  const [pageLimit, setPageLimit] = React.useState<string | number>(10);
+  const [pageLimit, setPageLimit] = React.useState<string | number>(5);
   const [page, setPage] = React.useState<string | number>(1);
+  const [totalpage, setTotalPage] = React.useState<number | string>(1);
   const [singleSelect, setSingleSelect] = React.useState<string>("");
   const [multiSelect, setMultiSelect] = React.useState<string[]>([]);
   const [search, setSearch] = React.useState<string>("");
@@ -173,17 +174,18 @@ export default function Subjects() {
     const getData = JSON.parse(getLocalStorageItem());
     const getAll = async () => {
       if (!!getData) {
-        const result = await getTickets(getData?.userId, page);
+        const result = await getTickets(getData?.userId, page, pageLimit);
         console.log(result.data);
         if (result?.status == 200) {
           setCheckData(result?.data?.response);
+          setTotalPage(result.data?.numberOfPages)
         } else {
           alert("Error while Fetching Data");
         }
       }
     };
     getAll();
-  }, []);
+  }, [pageLimit, page]);
 
   const handleChangePageLimit = (v: any) => setPageLimit(v);
   const handleChangePage = (v: any) => setPage(v);
@@ -380,12 +382,12 @@ export default function Subjects() {
             </Table>
             <Table.Pagination
               show
-              totalPages={2}
+              totalPages={totalpage}
               activePage={Number(page)}
               activeLimit={Number(pageLimit)}
-              nextPage={2}
-              prevPage={1}
-              pageLimit={[5, 10, 15, 20, 25]}
+              nextPage={Number(page) + 1}
+              prevPage={Number(page) - 1}
+              pageLimit={[5, 10, 15, 20]}
               onPrevPage={handlePageChange}
               onNextPage={handlePageChange}
               onSelectPage={handleChangePage}

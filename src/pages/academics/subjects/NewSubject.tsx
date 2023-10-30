@@ -177,6 +177,10 @@ export default function NewSubject() {
       }
     }
   };
+  // close confirmation
+  const closeConfirmation = () => {
+    setShowConfirmation(false);
+  };
   const backPath = "/app/tickets";
   console.log(ticket);
   return (
@@ -197,6 +201,7 @@ export default function NewSubject() {
                     selectedOptions={selectedOptions}
                     drugInfoOptions={drugInfoOptions}
                     logisticsOptions={logisticsOptions}
+                    closeConfirmation={closeConfirmation}
                   />
                 ) : (
                   <div className="p-7">
@@ -236,7 +241,7 @@ export default function NewSubject() {
                       />
                     </FormGroup>
                     <FormGroup>
-                      <div className="w-full md:w-1/2">
+                      <div className="w-full xl:w-1/2">
                         <Select
                           name="communication_mode"
                           label="Communication Mode"
@@ -250,7 +255,7 @@ export default function NewSubject() {
                           <option value="Walk In">Walk In</option>
                         </Select>
                       </div>
-                      <div className="w-full md:w-1/2">
+                      <div className="w-full xl:w-1/2">
                         <Select
                           name="transfer_mode"
                           label="Mode of Transfer"
@@ -278,7 +283,7 @@ export default function NewSubject() {
                     </FormGroup>
 
                     <FormGroup>
-                      <div className="w-full md:w-1/2">
+                      <div className="w-full xl:w-1/2">
                         <Select
                           name="action_request"
                           label="Action Request"
@@ -301,7 +306,7 @@ export default function NewSubject() {
                           />
                         )}
                       </div>
-                      <div className="w-full md:w-1/2">
+                      <div className="w-full xl:w-1/2">
                         <Input
                           label="Phone Number"
                           rules={{ required: "Kindly Input" }}
@@ -342,7 +347,10 @@ export default function NewSubject() {
                             <div key={category} className="flex flex-col">
                               <h3>{category}</h3>
                               {categoryOptions.map((option) => (
-                                <label key={option} className="mx-4 min-w-[50px]">
+                                <label
+                                  key={option}
+                                  className="mx-4 min-w-[50px]"
+                                >
                                   <input
                                     type="checkbox"
                                     style={{ margin: "0 6px" }}
@@ -415,13 +423,13 @@ export default function NewSubject() {
 
 function ConfirmationPage({
   ticket,
-
+  closeConfirmation,
   selectedOptions,
   drugInfoOptions,
   logisticsOptions,
 }: {
   drugInfoOptions: [];
-
+  closeConfirmation: () => {};
   ticket: SubjectFormData;
   logisticsOptions: [];
   selectedOptions: [];
@@ -442,7 +450,7 @@ function ConfirmationPage({
     combinedArray.push(ticket?.request_others);
   }
   const handleBackClick = () => {
-    navigate("/app/tickets/new");
+    // navigate("/app/tickets/new");
   };
   const handleSubmitClick = async () => {
     const send = { ...ticket, userId, customer_request: combinedArray };
@@ -518,7 +526,7 @@ function ConfirmationPage({
           classNames="w-25 ml-0"
           style={{ background: "#32a544", color: "#fff" }}
           variant="primary"
-          onClick={handleBackClick}
+          onClick={closeConfirmation}
           type="button"
         >
           Back

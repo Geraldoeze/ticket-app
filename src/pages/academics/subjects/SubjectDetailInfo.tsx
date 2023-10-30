@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import TextViewGroup from "../../../components/textview/TextViewGroup";
 import { ButtonEvent, ButtonEventGroup } from "../../../components/button";
 import { Container, Section } from "../../../components/container";
+import {Loader} from '../../compon'
 import {
   deleteTicket,
   postMessage,
@@ -28,7 +29,7 @@ export default function SubjectDetailInfo({
 
   useEffect(() => {
     const fetchmessage = async () => {
-      const result = await getMessage(userInfo?.userId);
+      const result = await getMessage(data?._id);
       console.log(result);
       if (result?.status == 200) {
         setMessage(result.data.messageData);
@@ -37,7 +38,7 @@ export default function SubjectDetailInfo({
 
     fetchmessage();
     setUpdateStatus(data?.status);
-  }, []);
+  }, [data?._id]);
   const handleDeleteSubject = async (id: string | number) => {
     console.log(id);
 
@@ -71,7 +72,7 @@ export default function SubjectDetailInfo({
       setMessage((prev) => [...prev, newMessage]);
       setComments("");
       const sendMessage = await postMessage({
-        userId: userInfo?.userId,
+        ticketId: data?._id,
         message: {
           comment: comment,
           date: getCurrentDateTime(),
@@ -144,7 +145,7 @@ export default function SubjectDetailInfo({
           <TextView title=""></TextView>
         </TextViewGroup>
       </Section>
-
+<Loader
       {/* Render the messages */}
       <Section>
         <ul>
