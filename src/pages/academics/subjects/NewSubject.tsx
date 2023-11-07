@@ -16,6 +16,8 @@ import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Select from "../../../components/form/customSelect";
 import { addNewTicket, statusUpdate } from "../../../api/httpRequest";
+import { State } from "country-state-city";
+
 import CheckboxGroup from "./Chech";
 import SelectField, {
   SelectFieldOption,
@@ -44,8 +46,9 @@ type SubjectFormData = {
 export default function NewSubject() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const navigate = useNavigate();
+  const [country, setCountry] = React.useState<string>("");
+  const [stateData, setStateData] = React.useState<any>([]);
   const [ticket, setTicket] = React.useState<any>({
-    country: "",
     state: "",
     city: "",
     date: "",
@@ -181,8 +184,22 @@ export default function NewSubject() {
   const closeConfirmation = () => {
     setShowConfirmation(false);
   };
+
+  // handle country selected
+  const handleCountrySelected = async (country: string) => {
+    setCountry(country);
+    const code = data?.find((val) => val.name === country)?.code;
+    // const states = await getStates(code);
+    // console.log(states);
+    const states = State.getStatesOfCountry(code);
+    if (states?.length >= 1) {
+      setStateData(states);
+    } else {
+      setStateData([]);
+    }
+  };
   const backPath = "/app/tickets";
-  console.log(ticket);
+
   return (
     <DefaultLayout>
       <BreadCrumb
@@ -198,6 +215,7 @@ export default function NewSubject() {
                 {showConfirmation ? (
                   <ConfirmationPage
                     ticket={ticket}
+                    country={country}
                     selectedOptions={selectedOptions}
                     drugInfoOptions={drugInfoOptions}
                     logisticsOptions={logisticsOptions}
@@ -213,26 +231,47 @@ export default function NewSubject() {
                         placeholder="Name"
                         rules={{ required: "Name is required" }}
                       />
-                      <Select
-                        name="country"
-                        label="Country"
-                        rules={{ required: "Select Country" }}
-                      >
-                        <option value="">Select...</option>
-                        {data?.map((val, id) => (
-                          <option value={val.name} key={val.code}>
-                            {val.name}
-                          </option>
-                        ))}
-                      </Select>
+                      <div className="w-full">
+                        <label
+                          htmlFor="country"
+                          className="mb-2.5 block text-black dark:text-white"
+                        >
+                          <select
+                            onChange={(e) =>
+                              handleCountrySelected(e.target.value)
+                            }
+                            value={country}
+                            className="relative z-20 w-full rounded border border-stroke bg-gray py-3 px-5 
+                            outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary
+                            "
+                          >
+                            <option value="">Select Country</option>
+                            {data?.map((val, id) => (
+                              <option value={val.name} key={val.code}>
+                                {val.name}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      </div>
                     </FormGroup>
                     <FormGroup>
-                      <Input
-                        label="State/Province"
+                      <Select
                         name="state"
-                        placeholder="Type State"
-                        rules={{ required: "State is required" }}
-                      />
+                        label="State/Province"
+                        classNames="w-1/2"
+                      >
+                        <option value="">Select State</option>
+                        <option value="">
+                          Ensure you've selected a country
+                        </option>
+                        {
+                          stateData?.map((val, id) => (
+                            <option key={id} value={val?.name}>
+                              {val?.name}
+                            </option>
+                          ))}
+                      </Select>
                       <Input
                         label="City"
                         name="city"
@@ -426,10 +465,12 @@ function ConfirmationPage({
   closeConfirmation,
   selectedOptions,
   drugInfoOptions,
+  country,
   logisticsOptions,
 }: {
   drugInfoOptions: [];
   closeConfirmation: () => {};
+  country: string;
   ticket: SubjectFormData;
   logisticsOptions: [];
   selectedOptions: [];
@@ -453,7 +494,7 @@ function ConfirmationPage({
     // navigate("/app/tickets/new");
   };
   const handleSubmitClick = async () => {
-    const send = { ...ticket, userId, customer_request: combinedArray };
+    const send = { ...ticket, userId, customer_request: combinedArray, country: country };
     console.log(send);
     const sendData = await addNewTicket(send);
     console.log(sendData);
@@ -470,7 +511,7 @@ function ConfirmationPage({
       <Section>
         <Header variant="h2">Ticket Summary</Header>
         <TextView title="Customer Name">{ticket?.customer_name}</TextView>
-        <TextView title="Country">{ticket?.country}</TextView>
+        <TextView title="Country">{country}</TextView>
         <TextView title="State">{ticket?.state}</TextView>
         <TextView title="City">{ticket?.city}</TextView>
         <TextView title="Action Request">{ticket?.action_request}</TextView>
