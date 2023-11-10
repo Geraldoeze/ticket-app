@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import UserOne from "../images/user/user-01.png";
+import Logo from "../images/logo/vastLogo.jpeg";
+
 import {
   clearItemFromLocalStorage,
   getLocalStorageItem,
@@ -61,7 +63,7 @@ const DropdownUser = () => {
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+          <img src={Logo} alt="User" style={{borderRadius: '50%', height: '35px'}} />
         </span>
 
         <svg

@@ -325,7 +325,7 @@ export default function NewSubject() {
                       <div className="w-full xl:w-1/2">
                         <Select
                           name="action_request"
-                          label="Action Request"
+                          label="Attention to Request"
                           onChange={(e) => handleOthers(e, "action_request")}
                           rules={{ required: "Select Action request" }}
                         >
