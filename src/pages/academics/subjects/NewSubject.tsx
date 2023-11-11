@@ -241,60 +241,100 @@ export default function NewSubject() {
   
   return (
     <DefaultLayout>
-      <BreadCrumb
-        pageName="New Tickets"
-        homeRoute={ROUTES_CONFIG.admin.entities.tickets}
-        homeRouteName="Tickets"
-      />
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 gap-1">
-            <div className="col-span-5 xl:col-span-3">
-              <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                {showConfirmation ? (
-                  <ConfirmationPage
-                    ticket={ticket}
-                    country={country}
-                    selectedOptions={selectedOptions}
-                    drugInfoOptions={drugInfoOptions}
-                    logisticsOptions={logisticsOptions}
-                    closeConfirmation={closeConfirmation}
-                  />
-                ) : (
-                  <div className="p-7">
-                    <Header variant="h2">Ticket Informtion</Header>
-                    <FormGroup>
-                      <Input
-                        label="Customer Name"
-                        name="customer_name"
-                        placeholder="Name"
-                        rules={{ required: "Name is required" }}
-                      />
-                      <div className="w-full">
-                        <label
-                          htmlFor="country"
-                          className="mb-2.5 block text-black dark:text-white"
-                        >
-                          <select
-                            onChange={(e) =>
-                              handleCountrySelected(e.target.value)
-                            }
-                            value={country}
-                            className="relative z-20 w-full rounded border border-stroke bg-gray py-3 px-5 
-                            outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary
-                            "
-                          >
-                            <option value="">Select Country</option>
-                            {data?.map((val, id) => (
-                              <option value={val.name} key={val.code}>
-                                {val.name}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                      </div>
-                    </FormGroup>
-                    <FormGroup>
+    <BreadCrumb
+      pageName="New Tickets"
+      homeRoute={ROUTES_CONFIG.admin.entities.tickets}
+      homeRouteName="Tickets"
+    />
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-1 gap-1">
+          <div className="col-span-5 xl:col-span-3">
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+              {showConfirmation ? (
+                <ConfirmationPage
+                  ticket={ticket}
+                  country={country}
+                  selectedOptions={selectedOptions}
+                  drugInfoOptions={drugInfoOptions}
+                  logisticsOptions={logisticsOptions}
+                  closeConfirmation={closeConfirmation}
+                  phoneNumber={phone_number?.value}
+                />
+              ) : (
+                <div className="p-7">
+                  <Header variant="h2">Ticket Informtion</Header>
+                  <FormGroup>
+                    <Input
+                      label="Customer Name"
+                      name="customer_name"
+                      placeholder="Name"
+                      rules={{ required: "Name is required" }}
+                    />
+                    <Select
+                      name="communication_mode"
+                      label="Communication Mode"
+                      classNames="w-1/2"
+                      rules={{ required: "Select mode" }}
+                    >
+                      <option value="">Select...</option>
+                      <option value="Calls">Calls</option>
+                      <option value="WhatsApp">WhatsApp</option>
+                      <option value="Email">Email</option>
+                      <option value="Walk In">Walk In</option>
+                    </Select>
+                  </FormGroup>
+                  <FormGroup>
+                    <div className="w-full xl:w-1/2">
+                      <label
+                        htmlFor="country"
+                        className="mb-2.5 block text-black dark:text-white"
+                      >
+                        Country
+                      </label>
+                      <select
+                        onChange={(e) =>
+                          handleCountrySelected(e.target.value)
+                        }
+                        value={country}
+                        className="relative z-20 w-full rounded border border-stroke bg-gray py-3 px-5 
+                          outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary
+                          "
+                      >
+                        <option value="">Select Country</option>
+                        {data?.map((val, id) => (
+                          <option value={val.name} key={val.code}>
+                            {val.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="w-full xl:w-1/2">
+                      <Select
+                        name="action_request"
+                        label="Request for Attention "
+                        onChange={(e) => handleOthers(e, "action_request")}
+                        rules={{ required: "Select Action request" }}
+                      >
+                        <option value="">Select...</option>
+                        <option value="Sales">Sales</option>
+                        <option value=" Finance">Finance</option>
+                        <option value="Procurement">Procurement</option>
+                        <option value="Administration">Administration</option>
+                        <option value="Logistics">Logistics</option>
+                        <option value="Other">Other</option>
+                      </Select>
+                      {otherInput?.action_request && (
+                        <Input
+                          label="Others"
+                          name=""
+                          placeholder="Type Others"
+                        />
+                      )}
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div className="w-full xl:w-1/2">
                       <Select
                         name="state"
                         label="State/Province"
@@ -304,108 +344,99 @@ export default function NewSubject() {
                         <option value="">
                           Ensure you've selected a country
                         </option>
-                        {
-                          stateData?.map((val, id) => (
-                            <option key={id} value={val?.name}>
-                              {val?.name}
-                            </option>
-                          ))}
+                        {stateData?.map((val, id) => (
+                          <option key={id} value={val?.name}>
+                            {val?.name}
+                          </option>
+                        ))}
                       </Select>
+                    </div>
+                    <div className="w-full xl:w-1/2">
+                      <Select
+                        name="transfer_mode"
+                        label="Mode of Transfer"
+                        rules={{ required: "Select Transfer mode" }}
+                        onChange={(e) => handleOthers(e, "transfer_mode")}
+                      >
+                        <option value="">Select...</option>
+                        <option value="CRM">CRM</option>
+                        <option value="Physical Submission">
+                          Physical Submission
+                        </option>
+                        <option value="WhatsApp">WhatsApp</option>
+                        <option value="Email">Email</option>
+                        <option value="Calls">Calls</option>
+                        <option value="Other">Other</option>
+                      </Select>
+                      {otherInput?.transfer_mode && (
+                        <Input
+                          label="Others"
+                          name="transfer_others"
+                          placeholder="Type Others"
+                        />
+                      )}
+                    </div>
+                  </FormGroup>
+                  <FormGroup>
+                    <div className="w-full xl:w-1/2">
                       <Input
-                        label="City"
+                        label="Address/Location"
                         name="city"
                         placeholder="Type City"
-                        rules={{ required: "City is required" }}
+                        rules={{
+                          required: "Address or location is required",
+                        }}
                       />
-                    </FormGroup>
-                    <FormGroup>
-                      <div className="w-full xl:w-1/2">
-                        <Select
-                          name="communication_mode"
-                          label="Communication Mode"
-                          classNames="w-1/2"
-                          rules={{ required: "Select mode" }}
+                    </div>
+                    <div className="w-full xl:w-1/2"></div>
+                  </FormGroup>
+                  <FormGroup>
+                    {/* <div className="w-full xl:w-1/2">
+                      <label htmlFor="phoneNumber">Phone Number</label>
+                      <PhoneInput
+                        containerStyle={{}}
+                        inputStyle={{
+                          opacity: 1,
+                          background: "rgb(239 244 251)",
+                          borderRadius: "8px",
+                          border: "2px",
+                          borderColor: "rgb(60 80 224 )",
+                          width: "100%",
+                          height: "3rem",
+                          margin: "10px 0",
+                        }}
+                        country={"us"}
+                        value={phone_number?.value}
+                        onChange={(e) => phoneHandler(e)}
+                      />
+                      {phone_number?.valid && (
+                        <h2
+                          className="text-center text-sm"
+                          style={{ color: "red" }}
                         >
-                          <option value="">Select...</option>
-                          <option value="Calls">Calls</option>
-                          <option value="WhatsApp">WhatsApp</option>
-                          <option value="Email">Email</option>
-                          <option value="Walk In">Walk In</option>
-                        </Select>
-                      </div>
-                      <div className="w-full xl:w-1/2">
-                        <Select
-                          name="transfer_mode"
-                          label="Mode of Transfer"
-                          rules={{ required: "Select Transfer mode" }}
-                          onChange={(e) => handleOthers(e, "transfer_mode")}
-                        >
-                          <option value="">Select...</option>
-                          <option value="CRM">CRM</option>
-                          <option value="Physical Submission">
-                            Physical Submission
-                          </option>
-                          <option value="WhatsApp">WhatsApp</option>
-                          <option value="Email">Email</option>
-                          <option value="Calls">Calls</option>
-                          <option value="Other">Other</option>
-                        </Select>
-                        {otherInput?.transfer_mode && (
-                          <Input
-                            label="Others"
-                            name="transfer_others"
-                            placeholder="Type Others"
-                          />
-                        )}
-                      </div>
-                    </FormGroup>
-
-                    <FormGroup>
-                      <div className="w-full xl:w-1/2">
-                        <Select
-                          name="action_request"
-                          label="Action Request"
-                          onChange={(e) => handleOthers(e, "action_request")}
-                          rules={{ required: "Select Action request" }}
-                        >
-                          <option value="">Select...</option>
-                          <option value="Sales">Sales</option>
-                          <option value=" Finance">Finance</option>
-                          <option value="Procurement">Procurement</option>
-                          <option value="Administration">Administration</option>
-                          <option value="Logistics">Logistics</option>
-                          <option value="Other">Other</option>
-                        </Select>
-                        {otherInput?.action_request && (
-                          <Input
-                            label="Others"
-                            name=""
-                            placeholder="Type Others"
-                          />
-                        )}
-                      </div>
-                      <div className="w-full xl:w-1/2">
-                        <Input
-                          label="Phone Number"
-                          rules={{ required: "Kindly Input" }}
-                          name="phone_number"
-                          placeholder="Phone Number"
-                        />
-                      </div>
-                    </FormGroup>
-                    <FormGroup>
-                      <Textarea
-                        label="Description"
+                          Kindly input number
+                        </h2>
+                      )}
+                    </div> */}
+                  </FormGroup>
+                  <FormGroup>
+                    <div className="w-full xl:w-1/2">
+                      <Input
+                        label="Email"
+                        type="email"
                         rules={{ required: "Kindly Input" }}
-                        name="description"
-                        placeholder="Description"
+                        name="email"
+                        placeholder="Enter Email"
                       />
-                    </FormGroup>
-                    <div className="my-8">
-                      <h2 className="my-2 text-center text-lg font-semibold">
-                        Customer’s Request (Tick as Applicable)
-                      </h2>
-                      <div className="mb-4 block">
+                    </div>
+                  </FormGroup>
+
+                  <div className="my-8">
+                    <h2 className="my-2 text-center text-lg font-semibold">
+                      Customer’s Request (Tick as Applicable)
+                    </h2>
+                    <div className="flex flex-1">
+                      <div className="mb-4 w-full xl:w-1/2">
                         {options.map((option) => (
                           <label key={option} className="mx-4 block">
                             <input
@@ -419,7 +450,7 @@ export default function NewSubject() {
                           </label>
                         ))}
                       </div>
-                      <div className="mb-3 block">
+                      <div className="mb-3  w-full xl:w-1/2">
                         {Object.entries(option).map(
                           ([category, categoryOptions]) => (
                             <div key={category} className="flex flex-col">
@@ -439,7 +470,10 @@ export default function NewSubject() {
                                         : drugInfoOptions.includes(option)
                                     }
                                     onChange={() =>
-                                      handleCheckboxChangeTwo(category, option)
+                                      handleCheckboxChangeTwo(
+                                        category,
+                                        option
+                                      )
                                     }
                                   />
                                   {option}
@@ -449,53 +483,83 @@ export default function NewSubject() {
                           )
                         )}
                       </div>
+                    </div>
+                    <div className="flex flex-wrap justify-between">
                       {otherInput?.customer_request && (
-                        <Input
-                          label="Others"
-                          name="request_others"
-                          placeholder="Type Others"
-                        />
+                        <div className="w-[48%]">
+                          <Input
+                            label="Others"
+                            name="request_others"
+                            placeholder="Type Others"
+                          />
+                        </div>
                       )}
-                      {invalid && (
-                        <h2
-                          className="text-center text-sm"
-                          style={{ color: "red" }}
-                        >
-                          Kindly Select One
-                        </h2>
+                      {custom_request?.logistics && (
+                        <div className="w-[48%]">
+                          <Input
+                            label="Logistics Others"
+                            name="custom_logistics"
+                            placeholder="Type Logistics Others"
+                          />
+                        </div>
+                      )}
+                      {custom_request?.drug_info && (
+                        <div className="w-[48%]">
+                          <Input
+                            label="Drug Information Others"
+                            name="custom_drugInfo"
+                            placeholder="Type Drug Information Others"
+                          />
+                        </div>
                       )}
                     </div>
-
-                    <Section classNames="flex gap-6 justify-end">
-                      <Button
-                        classNames="w-25"
-                        variant="secondary"
-                        style={{ background: "#32a544", color: "#fff" }}
-                        onClick={() => navigate(backPath)}
-                        type="button"
-                        isLoadingText="Saving..."
+                    {invalid && (
+                      <h2
+                        className="text-center text-sm"
+                        style={{ color: "red" }}
                       >
-                        Cancel
-                      </Button>
-                      <Button
-                        classNames="w-25"
-                        style={{ background: "#32a544", color: "#fff" }}
-                        variant="secondary"
-                        onClick={() => console.log(methods.formState)}
-                        isLoadingText="Creating..."
-                        type="submit"
-                      >
-                        Create
-                      </Button>
-                    </Section>
+                        Kindly Select One
+                      </h2>
+                    )}
                   </div>
-                )}
-              </div>
+                  <FormGroup>
+                    <Textarea
+                      label="Description"
+                      rules={{ required: "Kindly Input" }}
+                      name="description"
+                      placeholder="Description"
+                    />
+                  </FormGroup>
+                  <Section classNames="flex gap-6 justify-end">
+                    <Button
+                      classNames="w-25"
+                      variant="secondary"
+                      style={{ background: "#32a544", color: "#fff" }}
+                      onClick={() => navigate(backPath)}
+                      type="button"
+                      isLoadingText="Saving..."
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      classNames="w-25"
+                      style={{ background: "#32a544", color: "#fff" }}
+                      variant="secondary"
+                      onClick={() => console.log(methods.formState)}
+                      isLoadingText="Creating..."
+                      type="submit"
+                    >
+                      Create
+                    </Button>
+                  </Section>
+                </div>
+              )}
             </div>
           </div>
-        </form>
-      </FormProvider>
-    </DefaultLayout>
+        </div>
+      </form>
+    </FormProvider>
+  </DefaultLayout>
   );
 }
 
@@ -508,7 +572,7 @@ function ConfirmationPage({
   logisticsOptions,
 }: {
   drugInfoOptions: [];
-  closeConfirmation: () => {};
+  closeConfirmation: () => void;
   country: string;
   ticket: SubjectFormData;
   logisticsOptions: [];
@@ -868,326 +932,326 @@ function ConfirmationPage({
   // const backPath = "/app/tickets";
 
 //   return (
-//     <DefaultLayout>
-//       <BreadCrumb
-//         pageName="New Tickets"
-//         homeRoute={ROUTES_CONFIG.admin.entities.tickets}
-//         homeRouteName="Tickets"
-//       />
-//       <FormProvider {...methods}>
-//         <form onSubmit={methods.handleSubmit(onSubmit)}>
-//           <div className="grid grid-cols-1 gap-1">
-//             <div className="col-span-5 xl:col-span-3">
-//               <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-//                 {showConfirmation ? (
-//                   <ConfirmationPage
-//                     ticket={ticket}
-//                     country={country}
-//                     selectedOptions={selectedOptions}
-//                     drugInfoOptions={drugInfoOptions}
-//                     logisticsOptions={logisticsOptions}
-//                     closeConfirmation={closeConfirmation}
-//                     phoneNumber={phone_number?.value}
-//                   />
-//                 ) : (
-//                   <div className="p-7">
-//                     <Header variant="h2">Ticket Informtion</Header>
-//                     <FormGroup>
-//                       <Input
-//                         label="Customer Name"
-//                         name="customer_name"
-//                         placeholder="Name"
-//                         rules={{ required: "Name is required" }}
-//                       />
-//                       <Select
-//                         name="communication_mode"
-//                         label="Communication Mode"
-//                         classNames="w-1/2"
-//                         rules={{ required: "Select mode" }}
-//                       >
-//                         <option value="">Select...</option>
-//                         <option value="Calls">Calls</option>
-//                         <option value="WhatsApp">WhatsApp</option>
-//                         <option value="Email">Email</option>
-//                         <option value="Walk In">Walk In</option>
-//                       </Select>
-//                     </FormGroup>
-//                     <FormGroup>
-//                       <div className="w-full xl:w-1/2">
-//                         <label
-//                           htmlFor="country"
-//                           className="mb-2.5 block text-black dark:text-white"
-//                         >
-//                           Country
-//                         </label>
-//                         <select
-//                           onChange={(e) =>
-//                             handleCountrySelected(e.target.value)
-//                           }
-//                           value={country}
-//                           className="relative z-20 w-full rounded border border-stroke bg-gray py-3 px-5 
-//                             outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary
-//                             "
-//                         >
-//                           <option value="">Select Country</option>
-//                           {data?.map((val, id) => (
-//                             <option value={val.name} key={val.code}>
-//                               {val.name}
-//                             </option>
-//                           ))}
-//                         </select>
-//                       </div>
-//                       <div className="w-full xl:w-1/2">
-//                         <Select
-//                           name="action_request"
-//                           label="Request for Attention "
-//                           onChange={(e) => handleOthers(e, "action_request")}
-//                           rules={{ required: "Select Action request" }}
-//                         >
-//                           <option value="">Select...</option>
-//                           <option value="Sales">Sales</option>
-//                           <option value=" Finance">Finance</option>
-//                           <option value="Procurement">Procurement</option>
-//                           <option value="Administration">Administration</option>
-//                           <option value="Logistics">Logistics</option>
-//                           <option value="Other">Other</option>
-//                         </Select>
-//                         {otherInput?.action_request && (
-//                           <Input
-//                             label="Others"
-//                             name=""
-//                             placeholder="Type Others"
-//                           />
-//                         )}
-//                       </div>
-//                     </FormGroup>
-//                     <FormGroup>
-//                       <div className="w-full xl:w-1/2">
-//                         <Select
-//                           name="state"
-//                           label="State/Province"
-//                           classNames="w-1/2"
-//                         >
-//                           <option value="">Select State</option>
-//                           <option value="">
-//                             Ensure you've selected a country
-//                           </option>
-//                           {stateData?.map((val, id) => (
-//                             <option key={id} value={val?.name}>
-//                               {val?.name}
-//                             </option>
-//                           ))}
-//                         </Select>
-//                       </div>
-//                       <div className="w-full xl:w-1/2">
-//                         <Select
-//                           name="transfer_mode"
-//                           label="Mode of Transfer"
-//                           rules={{ required: "Select Transfer mode" }}
-//                           onChange={(e) => handleOthers(e, "transfer_mode")}
-//                         >
-//                           <option value="">Select...</option>
-//                           <option value="CRM">CRM</option>
-//                           <option value="Physical Submission">
-//                             Physical Submission
-//                           </option>
-//                           <option value="WhatsApp">WhatsApp</option>
-//                           <option value="Email">Email</option>
-//                           <option value="Calls">Calls</option>
-//                           <option value="Other">Other</option>
-//                         </Select>
-//                         {otherInput?.transfer_mode && (
-//                           <Input
-//                             label="Others"
-//                             name="transfer_others"
-//                             placeholder="Type Others"
-//                           />
-//                         )}
-//                       </div>
-//                     </FormGroup>
-//                     <FormGroup>
-//                       <div className="w-full xl:w-1/2">
-//                         <Input
-//                           label="Address/Location"
-//                           name="city"
-//                           placeholder="Type City"
-//                           rules={{
-//                             required: "Address or location is required",
-//                           }}
-//                         />
-//                       </div>
-//                       <div className="w-full xl:w-1/2"></div>
-//                     </FormGroup>
-//                     <FormGroup>
-//                       <div className="w-full xl:w-1/2">
-//                         <label htmlFor="phoneNumber">Phone Number</label>
-//                         <PhoneInput
-//                           containerStyle={{}}
-//                           inputStyle={{
-//                             opacity: 1,
-//                             background: "rgb(239 244 251)",
-//                             borderRadius: "8px",
-//                             border: "2px",
-//                             borderColor: "rgb(60 80 224 )",
-//                             width: "100%",
-//                             height: "3rem",
-//                             margin: "10px 0",
-//                           }}
-//                           country={"us"}
-//                           value={phone_number?.value}
-//                           onChange={(e) => phoneHandler(e)}
-//                         />
-//                         {phone_number?.valid && (
-//                           <h2
-//                             className="text-center text-sm"
-//                             style={{ color: "red" }}
-//                           >
-//                             Kindly input number
-//                           </h2>
-//                         )}
-//                       </div>
-//                     </FormGroup>
-//                     <FormGroup>
-//                       <div className="w-full xl:w-1/2">
-//                         <Input
-//                           label="Email"
-//                           type="email"
-//                           rules={{ required: "Kindly Input" }}
-//                           name="email"
-//                           placeholder="Enter Email"
-//                         />
-//                       </div>
-//                     </FormGroup>
+    // <DefaultLayout>
+    //   <BreadCrumb
+    //     pageName="New Tickets"
+    //     homeRoute={ROUTES_CONFIG.admin.entities.tickets}
+    //     homeRouteName="Tickets"
+    //   />
+    //   <FormProvider {...methods}>
+    //     <form onSubmit={methods.handleSubmit(onSubmit)}>
+    //       <div className="grid grid-cols-1 gap-1">
+    //         <div className="col-span-5 xl:col-span-3">
+    //           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+    //             {showConfirmation ? (
+    //               <ConfirmationPage
+    //                 ticket={ticket}
+    //                 country={country}
+    //                 selectedOptions={selectedOptions}
+    //                 drugInfoOptions={drugInfoOptions}
+    //                 logisticsOptions={logisticsOptions}
+    //                 closeConfirmation={closeConfirmation}
+    //                 phoneNumber={phone_number?.value}
+    //               />
+    //             ) : (
+    //               <div className="p-7">
+    //                 <Header variant="h2">Ticket Informtion</Header>
+    //                 <FormGroup>
+    //                   <Input
+    //                     label="Customer Name"
+    //                     name="customer_name"
+    //                     placeholder="Name"
+    //                     rules={{ required: "Name is required" }}
+    //                   />
+    //                   <Select
+    //                     name="communication_mode"
+    //                     label="Communication Mode"
+    //                     classNames="w-1/2"
+    //                     rules={{ required: "Select mode" }}
+    //                   >
+    //                     <option value="">Select...</option>
+    //                     <option value="Calls">Calls</option>
+    //                     <option value="WhatsApp">WhatsApp</option>
+    //                     <option value="Email">Email</option>
+    //                     <option value="Walk In">Walk In</option>
+    //                   </Select>
+    //                 </FormGroup>
+    //                 <FormGroup>
+    //                   <div className="w-full xl:w-1/2">
+    //                     <label
+    //                       htmlFor="country"
+    //                       className="mb-2.5 block text-black dark:text-white"
+    //                     >
+    //                       Country
+    //                     </label>
+    //                     <select
+    //                       onChange={(e) =>
+    //                         handleCountrySelected(e.target.value)
+    //                       }
+    //                       value={country}
+    //                       className="relative z-20 w-full rounded border border-stroke bg-gray py-3 px-5 
+    //                         outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary
+    //                         "
+    //                     >
+    //                       <option value="">Select Country</option>
+    //                       {data?.map((val, id) => (
+    //                         <option value={val.name} key={val.code}>
+    //                           {val.name}
+    //                         </option>
+    //                       ))}
+    //                     </select>
+    //                   </div>
+    //                   <div className="w-full xl:w-1/2">
+    //                     <Select
+    //                       name="action_request"
+    //                       label="Request for Attention "
+    //                       onChange={(e) => handleOthers(e, "action_request")}
+    //                       rules={{ required: "Select Action request" }}
+    //                     >
+    //                       <option value="">Select...</option>
+    //                       <option value="Sales">Sales</option>
+    //                       <option value=" Finance">Finance</option>
+    //                       <option value="Procurement">Procurement</option>
+    //                       <option value="Administration">Administration</option>
+    //                       <option value="Logistics">Logistics</option>
+    //                       <option value="Other">Other</option>
+    //                     </Select>
+    //                     {otherInput?.action_request && (
+    //                       <Input
+    //                         label="Others"
+    //                         name=""
+    //                         placeholder="Type Others"
+    //                       />
+    //                     )}
+    //                   </div>
+    //                 </FormGroup>
+    //                 <FormGroup>
+    //                   <div className="w-full xl:w-1/2">
+    //                     <Select
+    //                       name="state"
+    //                       label="State/Province"
+    //                       classNames="w-1/2"
+    //                     >
+    //                       <option value="">Select State</option>
+    //                       <option value="">
+    //                         Ensure you've selected a country
+    //                       </option>
+    //                       {stateData?.map((val, id) => (
+    //                         <option key={id} value={val?.name}>
+    //                           {val?.name}
+    //                         </option>
+    //                       ))}
+    //                     </Select>
+    //                   </div>
+    //                   <div className="w-full xl:w-1/2">
+    //                     <Select
+    //                       name="transfer_mode"
+    //                       label="Mode of Transfer"
+    //                       rules={{ required: "Select Transfer mode" }}
+    //                       onChange={(e) => handleOthers(e, "transfer_mode")}
+    //                     >
+    //                       <option value="">Select...</option>
+    //                       <option value="CRM">CRM</option>
+    //                       <option value="Physical Submission">
+    //                         Physical Submission
+    //                       </option>
+    //                       <option value="WhatsApp">WhatsApp</option>
+    //                       <option value="Email">Email</option>
+    //                       <option value="Calls">Calls</option>
+    //                       <option value="Other">Other</option>
+    //                     </Select>
+    //                     {otherInput?.transfer_mode && (
+    //                       <Input
+    //                         label="Others"
+    //                         name="transfer_others"
+    //                         placeholder="Type Others"
+    //                       />
+    //                     )}
+    //                   </div>
+    //                 </FormGroup>
+    //                 <FormGroup>
+    //                   <div className="w-full xl:w-1/2">
+    //                     <Input
+    //                       label="Address/Location"
+    //                       name="city"
+    //                       placeholder="Type City"
+    //                       rules={{
+    //                         required: "Address or location is required",
+    //                       }}
+    //                     />
+    //                   </div>
+    //                   <div className="w-full xl:w-1/2"></div>
+    //                 </FormGroup>
+    //                 <FormGroup>
+    //                   <div className="w-full xl:w-1/2">
+    //                     <label htmlFor="phoneNumber">Phone Number</label>
+    //                     <PhoneInput
+    //                       containerStyle={{}}
+    //                       inputStyle={{
+    //                         opacity: 1,
+    //                         background: "rgb(239 244 251)",
+    //                         borderRadius: "8px",
+    //                         border: "2px",
+    //                         borderColor: "rgb(60 80 224 )",
+    //                         width: "100%",
+    //                         height: "3rem",
+    //                         margin: "10px 0",
+    //                       }}
+    //                       country={"us"}
+    //                       value={phone_number?.value}
+    //                       onChange={(e) => phoneHandler(e)}
+    //                     />
+    //                     {phone_number?.valid && (
+    //                       <h2
+    //                         className="text-center text-sm"
+    //                         style={{ color: "red" }}
+    //                       >
+    //                         Kindly input number
+    //                       </h2>
+    //                     )}
+    //                   </div>
+    //                 </FormGroup>
+    //                 <FormGroup>
+    //                   <div className="w-full xl:w-1/2">
+    //                     <Input
+    //                       label="Email"
+    //                       type="email"
+    //                       rules={{ required: "Kindly Input" }}
+    //                       name="email"
+    //                       placeholder="Enter Email"
+    //                     />
+    //                   </div>
+    //                 </FormGroup>
 
-//                     <div className="my-8">
-//                       <h2 className="my-2 text-center text-lg font-semibold">
-//                         Customer’s Request (Tick as Applicable)
-//                       </h2>
-//                       <div className="flex flex-1">
-//                         <div className="mb-4 w-full xl:w-1/2">
-//                           {options.map((option) => (
-//                             <label key={option} className="mx-4 block">
-//                               <input
-//                                 type="checkbox"
-//                                 value={option}
-//                                 style={{ margin: "0 6px" }}
-//                                 checked={selectedOptions.includes(option)}
-//                                 onChange={() => handleCheckboxChange(option)}
-//                               />
-//                               {option}
-//                             </label>
-//                           ))}
-//                         </div>
-//                         <div className="mb-3  w-full xl:w-1/2">
-//                           {Object.entries(option).map(
-//                             ([category, categoryOptions]) => (
-//                               <div key={category} className="flex flex-col">
-//                                 <h3>{category}</h3>
-//                                 {categoryOptions.map((option) => (
-//                                   <label
-//                                     key={option}
-//                                     className="mx-4 min-w-[50px]"
-//                                   >
-//                                     <input
-//                                       type="checkbox"
-//                                       style={{ margin: "0 6px" }}
-//                                       value={option}
-//                                       checked={
-//                                         category === "Logistics"
-//                                           ? logisticsOptions.includes(option)
-//                                           : drugInfoOptions.includes(option)
-//                                       }
-//                                       onChange={() =>
-//                                         handleCheckboxChangeTwo(
-//                                           category,
-//                                           option
-//                                         )
-//                                       }
-//                                     />
-//                                     {option}
-//                                   </label>
-//                                 ))}
-//                               </div>
-//                             )
-//                           )}
-//                         </div>
-//                       </div>
-//                       <div className="flex flex-wrap justify-between">
-//                         {otherInput?.customer_request && (
-//                           <div className="w-[48%]">
-//                             <Input
-//                               label="Others"
-//                               name="request_others"
-//                               placeholder="Type Others"
-//                             />
-//                           </div>
-//                         )}
-//                         {custom_request?.logistics && (
-//                           <div className="w-[48%]">
-//                             <Input
-//                               label="Logistics Others"
-//                               name="custom_logistics"
-//                               placeholder="Type Logistics Others"
-//                             />
-//                           </div>
-//                         )}
-//                         {custom_request?.drug_info && (
-//                           <div className="w-[48%]">
-//                             <Input
-//                               label="Drug Information Others"
-//                               name="custom_drugInfo"
-//                               placeholder="Type Drug Information Others"
-//                             />
-//                           </div>
-//                         )}
-//                       </div>
-//                       {invalid && (
-//                         <h2
-//                           className="text-center text-sm"
-//                           style={{ color: "red" }}
-//                         >
-//                           Kindly Select One
-//                         </h2>
-//                       )}
-//                     </div>
-//                     <FormGroup>
-//                       <Textarea
-//                         label="Description"
-//                         rules={{ required: "Kindly Input" }}
-//                         name="description"
-//                         placeholder="Description"
-//                       />
-//                     </FormGroup>
-//                     <Section classNames="flex gap-6 justify-end">
-//                       <Button
-//                         classNames="w-25"
-//                         variant="secondary"
-//                         style={{ background: "#32a544", color: "#fff" }}
-//                         onClick={() => navigate(backPath)}
-//                         type="button"
-//                         isLoadingText="Saving..."
-//                       >
-//                         Cancel
-//                       </Button>
-//                       <Button
-//                         classNames="w-25"
-//                         style={{ background: "#32a544", color: "#fff" }}
-//                         variant="secondary"
-//                         onClick={() => console.log(methods.formState)}
-//                         isLoadingText="Creating..."
-//                         type="submit"
-//                       >
-//                         Create
-//                       </Button>
-//                     </Section>
-//                   </div>
-//                 )}
-//               </div>
-//             </div>
-//           </div>
-//         </form>
-//       </FormProvider>
-//     </DefaultLayout>
+    //                 <div className="my-8">
+    //                   <h2 className="my-2 text-center text-lg font-semibold">
+    //                     Customer’s Request (Tick as Applicable)
+    //                   </h2>
+    //                   <div className="flex flex-1">
+    //                     <div className="mb-4 w-full xl:w-1/2">
+    //                       {options.map((option) => (
+    //                         <label key={option} className="mx-4 block">
+    //                           <input
+    //                             type="checkbox"
+    //                             value={option}
+    //                             style={{ margin: "0 6px" }}
+    //                             checked={selectedOptions.includes(option)}
+    //                             onChange={() => handleCheckboxChange(option)}
+    //                           />
+    //                           {option}
+    //                         </label>
+    //                       ))}
+    //                     </div>
+    //                     <div className="mb-3  w-full xl:w-1/2">
+    //                       {Object.entries(option).map(
+    //                         ([category, categoryOptions]) => (
+    //                           <div key={category} className="flex flex-col">
+    //                             <h3>{category}</h3>
+    //                             {categoryOptions.map((option) => (
+    //                               <label
+    //                                 key={option}
+    //                                 className="mx-4 min-w-[50px]"
+    //                               >
+    //                                 <input
+    //                                   type="checkbox"
+    //                                   style={{ margin: "0 6px" }}
+    //                                   value={option}
+    //                                   checked={
+    //                                     category === "Logistics"
+    //                                       ? logisticsOptions.includes(option)
+    //                                       : drugInfoOptions.includes(option)
+    //                                   }
+    //                                   onChange={() =>
+    //                                     handleCheckboxChangeTwo(
+    //                                       category,
+    //                                       option
+    //                                     )
+    //                                   }
+    //                                 />
+    //                                 {option}
+    //                               </label>
+    //                             ))}
+    //                           </div>
+    //                         )
+    //                       )}
+    //                     </div>
+    //                   </div>
+    //                   <div className="flex flex-wrap justify-between">
+    //                     {otherInput?.customer_request && (
+    //                       <div className="w-[48%]">
+    //                         <Input
+    //                           label="Others"
+    //                           name="request_others"
+    //                           placeholder="Type Others"
+    //                         />
+    //                       </div>
+    //                     )}
+    //                     {custom_request?.logistics && (
+    //                       <div className="w-[48%]">
+    //                         <Input
+    //                           label="Logistics Others"
+    //                           name="custom_logistics"
+    //                           placeholder="Type Logistics Others"
+    //                         />
+    //                       </div>
+    //                     )}
+    //                     {custom_request?.drug_info && (
+    //                       <div className="w-[48%]">
+    //                         <Input
+    //                           label="Drug Information Others"
+    //                           name="custom_drugInfo"
+    //                           placeholder="Type Drug Information Others"
+    //                         />
+    //                       </div>
+    //                     )}
+    //                   </div>
+    //                   {invalid && (
+    //                     <h2
+    //                       className="text-center text-sm"
+    //                       style={{ color: "red" }}
+    //                     >
+    //                       Kindly Select One
+    //                     </h2>
+    //                   )}
+    //                 </div>
+    //                 <FormGroup>
+    //                   <Textarea
+    //                     label="Description"
+    //                     rules={{ required: "Kindly Input" }}
+    //                     name="description"
+    //                     placeholder="Description"
+    //                   />
+    //                 </FormGroup>
+    //                 <Section classNames="flex gap-6 justify-end">
+    //                   <Button
+    //                     classNames="w-25"
+    //                     variant="secondary"
+    //                     style={{ background: "#32a544", color: "#fff" }}
+    //                     onClick={() => navigate(backPath)}
+    //                     type="button"
+    //                     isLoadingText="Saving..."
+    //                   >
+    //                     Cancel
+    //                   </Button>
+    //                   <Button
+    //                     classNames="w-25"
+    //                     style={{ background: "#32a544", color: "#fff" }}
+    //                     variant="secondary"
+    //                     onClick={() => console.log(methods.formState)}
+    //                     isLoadingText="Creating..."
+    //                     type="submit"
+    //                   >
+    //                     Create
+    //                   </Button>
+    //                 </Section>
+    //               </div>
+    //             )}
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </form>
+    //   </FormProvider>
+    // </DefaultLayout>
 //   );
 // }
 
