@@ -17,14 +17,16 @@ import { useNavigate } from "react-router-dom";
 import Select from "../../../components/form/customSelect";
 import { addNewTicket, statusUpdate } from "../../../api/httpRequest";
 import { State } from "country-state-city";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
-import CheckboxGroup from "./Chech";
 import SelectField, {
   SelectFieldOption,
 } from "../../../components/SelectField";
 import { ROUTES_CONFIG } from "../../../layout/config";
 import { getLocalStorageItem } from "../../../utils/storage";
 import data from "../../../data/countries.json";
+
 type SubjectFormData = {
   customer_name: string;
   date: string;
