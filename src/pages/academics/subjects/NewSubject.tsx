@@ -18,13 +18,14 @@ import Select from "../../../components/form/customSelect";
 import { addNewTicket, statusUpdate } from "../../../api/httpRequest";
 import { State } from "country-state-city";
 
+import CheckboxGroup from "./Chech";
 import SelectField, {
   SelectFieldOption,
 } from "../../../components/SelectField";
 import { ROUTES_CONFIG } from "../../../layout/config";
 import { getLocalStorageItem } from "../../../utils/storage";
 import data from "../../../data/countries.json";
-import codes from "country-calling-code";
+import { codes } from "country-calling-code";
 
 type SubjectFormData = {
   customer_name: string;
@@ -52,9 +53,11 @@ export default function NewSubject() {
   const [phone_number, setPhone_Number] = React.useState<{
     valid: boolean;
     value: string;
+    code: string;
   }>({
     valid: false,
     value: "",
+    code: "1",
   });
   const [stateData, setStateData] = React.useState<any>([]);
   const [ticket, setTicket] = React.useState<any>({
@@ -97,13 +100,13 @@ export default function NewSubject() {
       "status of Delivery",
       "Availability of Service",
       "Cost of Delivery",
-      "others",
+      "Others",
     ],
     "Drug Information": [
       "Available Brand/Substitute/Quantity",
       "Strength",
       "Indication",
-      "others",
+      "Others",
     ],
   };
   const methods = useForm<SubjectFormData>();
@@ -152,7 +155,7 @@ export default function NewSubject() {
 
   const handleCheckboxChangeTwo = (category, option) => {
     if (category === "Logistics") {
-      if (option === "others") {
+      if (option === "Others") {
         setCustom_Request((prev) => ({
           ...prev,
           logistics: !prev.logistics,
@@ -165,7 +168,7 @@ export default function NewSubject() {
         setLogisticsOptions([...logisticsOptions, option]);
       }
     } else if (category === "Drug Information") {
-      if (option === "others") {
+      if (option === "Others") {
         setCustom_Request((prev) => ({
           ...prev,
           drug_info: !prev.drug_info,
@@ -232,12 +235,19 @@ export default function NewSubject() {
 
   // phone handler
   const phoneHandler = (e) => {
-    console.log(e);
-    setPhone_Number(() => ({ valid: false, value: e }));
+    setPhone_Number((prev) => ({
+      ...prev,
+      valid: false,
+      value: e.target.value,
+    }));
   };
 
+  // code handler
+  const handleCodeSelector = (e) => {
+    setPhone_Number((prev) => ({ ...prev, code: e.target.value }));
+  };
   const backPath = "/app/tickets";
-
+console.log(phone_number)
   return (
     <DefaultLayout>
       <BreadCrumb
@@ -258,7 +268,7 @@ export default function NewSubject() {
                     drugInfoOptions={drugInfoOptions}
                     logisticsOptions={logisticsOptions}
                     closeConfirmation={closeConfirmation}
-                    phoneNumber={phone_number?.value}
+                    phoneNumber={phone_number}
                   />
                 ) : (
                   <div className="p-7">
@@ -297,8 +307,8 @@ export default function NewSubject() {
                           }
                           value={country}
                           className="relative z-20 w-full rounded border border-stroke bg-gray py-3 px-5 
-                          outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary
-                          "
+                            outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary
+                            "
                         >
                           <option value="">Select Country</option>
                           {data?.map((val, id) => (
@@ -390,28 +400,29 @@ export default function NewSubject() {
                       <div className="w-full xl:w-1/2"></div>
                     </FormGroup>
                     <FormGroup>
-                      <div className="flex w-full items-center xl:w-1/2">
+                      <div className="w-full xl:w-1/2">
                         <label htmlFor="phoneNumber">Phone Number</label>
                         <div className="relative flex w-full items-center rounded border border-stroke bg-gray py-3 px-4.5">
                           {/* Select for country code */}
                           <select
                             id="countryCode"
-                            className="mr-2.5 appearance-none bg-transparent text-black focus:outline-none"
+                            className="border-blue-200 mr-2.5 w-[150px] appearance-none border-2 bg-transparent text-black focus:outline-none"
                             value={phone_number?.code}
-                            onChange={(e) => countryCodeHandler(e)}
+                            onChange={handleCodeSelector}
                           >
-                            {/* Add your country code options here */}
-                            <option value="+1">+1 (USA)</option>
-                            {/* Add more options as needed */}
+                            {codes?.map((val, id) => (
+                              <option value={val.countryCodes[0]}>
+                                +{val.countryCodes[0]} {val.country}{" "}
+                              </option>
+                            ))}
                           </select>
-
-                          {/* Input for phone number */}
                           <input
                             id="phoneNumber"
-                            className="flex-1 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white"
+                            className="flex-1 bg-gray text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white"
                             value={phone_number?.value}
                             onChange={(e) => phoneHandler(e)}
                             placeholder="Phone Number"
+                            maxLength={12}
                           />
                         </div>
 
@@ -580,7 +591,7 @@ function ConfirmationPage({
 }: {
   drugInfoOptions: [];
   closeConfirmation: () => {};
-  phoneNumber: string;
+  phoneNumber: { code: string; value: string };
   country: string;
   ticket: SubjectFormData;
   logisticsOptions: [];
@@ -609,15 +620,32 @@ function ConfirmationPage({
   if (ticket?.custom_drugInfo?.length >= 1) {
     combinedArray.push(ticket?.custom_drugInfo);
   }
+
+  function filterAndRemoveOthers(array) {
+    const filteredArray = array.filter((item) => {
+      // Check if 'Others' is a separate word and not part of a sentence
+      const isSeparateWord = !/\wOthers\w/i.test(item);
+      
+      // If 'Others' is a separate word, include it in the filtered array
+      return isSeparateWord && !item.includes('Others');
+    });
+  
+    return filteredArray;
+  }
+  console.log(filterAndRemoveOthers(combinedArray))
+  
+  
+  
   const handleBackClick = () => {
     // navigate("/app/tickets/new");
   };
+  const phone = `${phoneNumber.code}-${phoneNumber.value}`;
   const handleSubmitClick = async () => {
     const send = {
       ...ticket,
       userId,
-      phoneNumber,
-      customer_request: combinedArray,
+      phone_number: phone,
+      customer_request: filterAndRemoveOthers(combinedArray),
       country: country,
     };
     console.log(send);
@@ -644,7 +672,7 @@ function ConfirmationPage({
         <TextView title="Status">{ticket?.status}</TextView>
         <TextView title="Description">{ticket?.description}</TextView>
         <TextView title="Transfer Mode">{ticket?.transfer_mode}</TextView>
-        <TextView title="Phone Number">{phoneNumber}</TextView>
+        <TextView title="Phone Number">{phone}</TextView>
         <TextView title="Email">{ticket?.email}</TextView>
         <TextView title="Communication Mode">
           {ticket?.communication_mode}
