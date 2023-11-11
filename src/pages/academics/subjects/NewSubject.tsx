@@ -17,6 +17,8 @@ import { useNavigate } from "react-router-dom";
 import Select from "../../../components/form/customSelect";
 import { addNewTicket, statusUpdate } from "../../../api/httpRequest";
 import { State } from "country-state-city";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 import CheckboxGroup from "./Chech";
 import SelectField, {
@@ -35,18 +37,26 @@ type SubjectFormData = {
   status: string;
   amount: string;
   communication_mode: string;
-  phone_number: string;
-  country: string;
   state: string;
   city: string;
   transfer_mode: string;
   request_others: string;
+  email: string;
+  custom_logistics: string;
+  custom_drugInfo: string;
 };
 
 export default function NewSubject() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const navigate = useNavigate();
   const [country, setCountry] = React.useState<string>("");
+  const [phone_number, setPhone_Number] = React.useState<{
+    valid: boolean;
+    value: string;
+  }>({
+    valid: false,
+    value: "",
+  });
   const [stateData, setStateData] = React.useState<any>([]);
   const [ticket, setTicket] = React.useState<any>({
     state: "",
@@ -57,6 +67,7 @@ export default function NewSubject() {
     description: "",
     transfer_mode: "",
     status: "created",
+    email: "",
   });
   const [showConfirmation, setShowConfirmation] = React.useState(false);
   const [invalid, setInvalid] = React.useState(false);
@@ -67,6 +78,10 @@ export default function NewSubject() {
     transfer_mode: false,
     customer_request: false,
     action_request: false,
+  });
+  const [custom_request, setCustom_Request] = useState({
+    logistics: false,
+    drug_info: false,
   });
 
   const options = [
@@ -80,15 +95,16 @@ export default function NewSubject() {
   ];
   const option = {
     Logistics: [
-      "Station of Delivery",
+      "status of Delivery",
       "Availability of Service",
       "Cost of Delivery",
+      "others",
     ],
     "Drug Information": [
-      "Available Brand or Substitute",
-      "Indication",
+      "Available Brand/Substitute/Quantity",
       "Strength",
-      "Pack Size",
+      "Indication",
+      "others",
     ],
   };
   const methods = useForm<SubjectFormData>();
@@ -112,7 +128,10 @@ export default function NewSubject() {
       status: "created",
       date: new Date().toLocaleDateString(),
     });
-
+    if (phone_number.value?.length <= 2) {
+      setPhone_Number((prev) => ({ ...prev, valid: true }));
+      return;
+    }
     setShowConfirmation(true);
   };
 
@@ -134,6 +153,12 @@ export default function NewSubject() {
 
   const handleCheckboxChangeTwo = (category, option) => {
     if (category === "Logistics") {
+      if (option === "others") {
+        setCustom_Request((prev) => ({
+          ...prev,
+          logistics: !prev.logistics,
+        }));
+      }
       // Check if the option is already in logisticsOptions
       if (logisticsOptions.includes(option)) {
         setLogisticsOptions(logisticsOptions.filter((item) => item !== option));
@@ -141,6 +166,13 @@ export default function NewSubject() {
         setLogisticsOptions([...logisticsOptions, option]);
       }
     } else if (category === "Drug Information") {
+      if (option === "others") {
+        setCustom_Request((prev) => ({
+          ...prev,
+          drug_info: !prev.drug_info,
+        }));
+      }
+
       // Check if the option is already in drugInfoOptions
       if (drugInfoOptions.includes(option)) {
         setDrugInfoOptions(drugInfoOptions.filter((item) => item !== option));
@@ -198,6 +230,13 @@ export default function NewSubject() {
       setStateData([]);
     }
   };
+
+  // phone handler
+  const phoneHandler = (e) => {
+    console.log(e);
+    setPhone_Number((prev) => ({ valid: false, value: e }));
+  };
+
   const backPath = "/app/tickets";
 
   return (
@@ -220,6 +259,7 @@ export default function NewSubject() {
                     drugInfoOptions={drugInfoOptions}
                     logisticsOptions={logisticsOptions}
                     closeConfirmation={closeConfirmation}
+                    phoneNumber={phone_number?.value}
                   />
                 ) : (
                   <div className="p-7">
@@ -231,67 +271,84 @@ export default function NewSubject() {
                         placeholder="Name"
                         rules={{ required: "Name is required" }}
                       />
-                      <div className="w-full">
+                      <Select
+                        name="communication_mode"
+                        label="Communication Mode"
+                        classNames="w-1/2"
+                        rules={{ required: "Select mode" }}
+                      >
+                        <option value="">Select...</option>
+                        <option value="Calls">Calls</option>
+                        <option value="WhatsApp">WhatsApp</option>
+                        <option value="Email">Email</option>
+                        <option value="Walk In">Walk In</option>
+                      </Select>
+                    </FormGroup>
+                    <FormGroup>
+                      <div className="w-full xl:w-1/2">
                         <label
                           htmlFor="country"
                           className="mb-2.5 block text-black dark:text-white"
                         >
-                          <select
-                            onChange={(e) =>
-                              handleCountrySelected(e.target.value)
-                            }
-                            value={country}
-                            className="relative z-20 w-full rounded border border-stroke bg-gray py-3 px-5 
+                          Country
+                        </label>
+                        <select
+                          onChange={(e) =>
+                            handleCountrySelected(e.target.value)
+                          }
+                          value={country}
+                          className="relative z-20 w-full rounded border border-stroke bg-gray py-3 px-5 
                             outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary
                             "
-                          >
-                            <option value="">Select Country</option>
-                            {data?.map((val, id) => (
-                              <option value={val.name} key={val.code}>
-                                {val.name}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                      </div>
-                    </FormGroup>
-                    <FormGroup>
-                      <Select
-                        name="state"
-                        label="State/Province"
-                        classNames="w-1/2"
-                      >
-                        <option value="">Select State</option>
-                        <option value="">
-                          Ensure you've selected a country
-                        </option>
-                        {
-                          stateData?.map((val, id) => (
-                            <option key={id} value={val?.name}>
-                              {val?.name}
+                        >
+                          <option value="">Select Country</option>
+                          {data?.map((val, id) => (
+                            <option value={val.name} key={val.code}>
+                              {val.name}
                             </option>
                           ))}
-                      </Select>
-                      <Input
-                        label="City"
-                        name="city"
-                        placeholder="Type City"
-                        rules={{ required: "City is required" }}
-                      />
+                        </select>
+                      </div>
+                      <div className="w-full xl:w-1/2">
+                        <Select
+                          name="action_request"
+                          label="Request for Attention "
+                          onChange={(e) => handleOthers(e, "action_request")}
+                          rules={{ required: "Select Action request" }}
+                        >
+                          <option value="">Select...</option>
+                          <option value="Sales">Sales</option>
+                          <option value=" Finance">Finance</option>
+                          <option value="Procurement">Procurement</option>
+                          <option value="Administration">Administration</option>
+                          <option value="Logistics">Logistics</option>
+                          <option value="Other">Other</option>
+                        </Select>
+                        {otherInput?.action_request && (
+                          <Input
+                            label="Others"
+                            name=""
+                            placeholder="Type Others"
+                          />
+                        )}
+                      </div>
                     </FormGroup>
                     <FormGroup>
                       <div className="w-full xl:w-1/2">
                         <Select
-                          name="communication_mode"
-                          label="Communication Mode"
+                          name="state"
+                          label="State/Province"
                           classNames="w-1/2"
-                          rules={{ required: "Select mode" }}
                         >
-                          <option value="">Select...</option>
-                          <option value="Calls">Calls</option>
-                          <option value="WhatsApp">WhatsApp</option>
-                          <option value="Email">Email</option>
-                          <option value="Walk In">Walk In</option>
+                          <option value="">Select State</option>
+                          <option value="">
+                            Ensure you've selected a country
+                          </option>
+                          {stateData?.map((val, id) => (
+                            <option key={id} value={val?.name}>
+                              {val?.name}
+                            </option>
+                          ))}
                         </Select>
                       </div>
                       <div className="w-full xl:w-1/2">
@@ -320,103 +377,142 @@ export default function NewSubject() {
                         )}
                       </div>
                     </FormGroup>
-
                     <FormGroup>
                       <div className="w-full xl:w-1/2">
-                        <Select
-                          name="action_request"
-                          label="Attention to Request"
-                          onChange={(e) => handleOthers(e, "action_request")}
-                          rules={{ required: "Select Action request" }}
-                        >
-                          <option value="">Select...</option>
-                          <option value="Sales">Sales</option>
-                          <option value=" Finance">Finance</option>
-                          <option value="Procurement">Procurement</option>
-                          <option value="Administration">Administration</option>
-                          <option value="Logistics">Logistics</option>
-                          <option value="Other">Other</option>
-                        </Select>
-                        {otherInput?.action_request && (
-                          <Input
-                            label="Others"
-                            name=""
-                            placeholder="Type Others"
-                          />
+                        <Input
+                          label="Address/Location"
+                          name="city"
+                          placeholder="Type City"
+                          rules={{
+                            required: "Address or location is required",
+                          }}
+                        />
+                      </div>
+                      <div className="w-full xl:w-1/2"></div>
+                    </FormGroup>
+                    <FormGroup>
+                      <div className="w-full xl:w-1/2">
+                        <label htmlFor="phoneNumber">Phone Number</label>
+                        <PhoneInput
+                          containerStyle={{}}
+                          inputStyle={{
+                            opacity: 1,
+                            background: "rgb(239 244 251)",
+                            borderRadius: "8px",
+                            border: "2px",
+                            borderColor: "rgb(60 80 224 )",
+                            width: "100%",
+                            height: "3rem",
+                            margin: "10px 0",
+                          }}
+                          country={"us"}
+                          value={phone_number?.value}
+                          onChange={(e) => phoneHandler(e)}
+                        />
+                        {phone_number?.valid && (
+                          <h2
+                            className="text-center text-sm"
+                            style={{ color: "red" }}
+                          >
+                            Kindly input number
+                          </h2>
                         )}
                       </div>
+                    </FormGroup>
+                    <FormGroup>
                       <div className="w-full xl:w-1/2">
                         <Input
-                          label="Phone Number"
+                          label="Email"
+                          type="email"
                           rules={{ required: "Kindly Input" }}
-                          name="phone_number"
-                          placeholder="Phone Number"
+                          name="email"
+                          placeholder="Enter Email"
                         />
                       </div>
                     </FormGroup>
-                    <FormGroup>
-                      <Textarea
-                        label="Description"
-                        rules={{ required: "Kindly Input" }}
-                        name="description"
-                        placeholder="Description"
-                      />
-                    </FormGroup>
+
                     <div className="my-8">
                       <h2 className="my-2 text-center text-lg font-semibold">
                         Customer’s Request (Tick as Applicable)
                       </h2>
-                      <div className="mb-4 block">
-                        {options.map((option) => (
-                          <label key={option} className="mx-4 block">
-                            <input
-                              type="checkbox"
-                              value={option}
-                              style={{ margin: "0 6px" }}
-                              checked={selectedOptions.includes(option)}
-                              onChange={() => handleCheckboxChange(option)}
-                            />
-                            {option}
-                          </label>
-                        ))}
+                      <div className="flex flex-1">
+                        <div className="mb-4 w-full xl:w-1/2">
+                          {options.map((option) => (
+                            <label key={option} className="mx-4 block">
+                              <input
+                                type="checkbox"
+                                value={option}
+                                style={{ margin: "0 6px" }}
+                                checked={selectedOptions.includes(option)}
+                                onChange={() => handleCheckboxChange(option)}
+                              />
+                              {option}
+                            </label>
+                          ))}
+                        </div>
+                        <div className="mb-3  w-full xl:w-1/2">
+                          {Object.entries(option).map(
+                            ([category, categoryOptions]) => (
+                              <div key={category} className="flex flex-col">
+                                <h3>{category}</h3>
+                                {categoryOptions.map((option) => (
+                                  <label
+                                    key={option}
+                                    className="mx-4 min-w-[50px]"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      style={{ margin: "0 6px" }}
+                                      value={option}
+                                      checked={
+                                        category === "Logistics"
+                                          ? logisticsOptions.includes(option)
+                                          : drugInfoOptions.includes(option)
+                                      }
+                                      onChange={() =>
+                                        handleCheckboxChangeTwo(
+                                          category,
+                                          option
+                                        )
+                                      }
+                                    />
+                                    {option}
+                                  </label>
+                                ))}
+                              </div>
+                            )
+                          )}
+                        </div>
                       </div>
-                      <div className="mb-3 block">
-                        {Object.entries(option).map(
-                          ([category, categoryOptions]) => (
-                            <div key={category} className="flex flex-col">
-                              <h3>{category}</h3>
-                              {categoryOptions.map((option) => (
-                                <label
-                                  key={option}
-                                  className="mx-4 min-w-[50px]"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    style={{ margin: "0 6px" }}
-                                    value={option}
-                                    checked={
-                                      category === "Logistics"
-                                        ? logisticsOptions.includes(option)
-                                        : drugInfoOptions.includes(option)
-                                    }
-                                    onChange={() =>
-                                      handleCheckboxChangeTwo(category, option)
-                                    }
-                                  />
-                                  {option}
-                                </label>
-                              ))}
-                            </div>
-                          )
+                      <div className="flex flex-wrap justify-between">
+                        {otherInput?.customer_request && (
+                          <div className="w-[48%]">
+                            <Input
+                              label="Others"
+                              name="request_others"
+                              placeholder="Type Others"
+                            />
+                          </div>
+                        )}
+                        {custom_request?.logistics && (
+                          <div className="w-[48%]">
+                            <Input
+                              label="Logistics Others"
+                              name="custom_logistics"
+                              placeholder="Type Logistics Others"
+                            />
+                          </div>
+                        )}
+                        {custom_request?.drug_info && (
+                          <div className="w-[48%]">
+                            <Input
+                              label="Drug Info Others"
+                              name="custom_drugInfo"
+                              placeholder="Type Drug Information Others"
+                            />
+                          </div>
                         )}
                       </div>
-                      {otherInput?.customer_request && (
-                        <Input
-                          label="Others"
-                          name="request_others"
-                          placeholder="Type Others"
-                        />
-                      )}
                       {invalid && (
                         <h2
                           className="text-center text-sm"
@@ -426,7 +522,14 @@ export default function NewSubject() {
                         </h2>
                       )}
                     </div>
-
+                    <FormGroup>
+                      <Textarea
+                        label="Description"
+                        rules={{ required: "Kindly Input" }}
+                        name="description"
+                        placeholder="Description"
+                      />
+                    </FormGroup>
                     <Section classNames="flex gap-6 justify-end">
                       <Button
                         classNames="w-25"
@@ -463,6 +566,7 @@ export default function NewSubject() {
 function ConfirmationPage({
   ticket,
   closeConfirmation,
+  phoneNumber,
   selectedOptions,
   drugInfoOptions,
   country,
@@ -470,6 +574,7 @@ function ConfirmationPage({
 }: {
   drugInfoOptions: [];
   closeConfirmation: () => {};
+  phoneNumber: string;
   country: string;
   ticket: SubjectFormData;
   logisticsOptions: [];
@@ -490,11 +595,25 @@ function ConfirmationPage({
   if (ticket?.request_others) {
     combinedArray.push(ticket?.request_others);
   }
+
+  if (ticket?.custom_logistics?.length >= 1) {
+    console.log(ticket.custom_drugInfo, ticket.custom_logistics);
+    combinedArray.push(ticket?.custom_logistics);
+  }
+  if (ticket?.custom_drugInfo?.length >= 1) {
+    combinedArray.push(ticket?.custom_drugInfo);
+  }
   const handleBackClick = () => {
     // navigate("/app/tickets/new");
   };
   const handleSubmitClick = async () => {
-    const send = { ...ticket, userId, customer_request: combinedArray, country: country };
+    const send = {
+      ...ticket,
+      userId,
+      phoneNumber,
+      customer_request: combinedArray,
+      country: country,
+    };
     console.log(send);
     const sendData = await addNewTicket(send);
     console.log(sendData);
@@ -519,8 +638,8 @@ function ConfirmationPage({
         <TextView title="Status">{ticket?.status}</TextView>
         <TextView title="Description">{ticket?.description}</TextView>
         <TextView title="Transfer Mode">{ticket?.transfer_mode}</TextView>
-        <TextView title="Phone Number">{ticket?.phone_number}</TextView>
-
+        <TextView title="Phone Number">{phoneNumber}</TextView>
+        <TextView title="Email">{ticket?.email}</TextView>
         <TextView title="Communication Mode">
           {ticket?.communication_mode}
         </TextView>
@@ -553,8 +672,8 @@ function ConfirmationPage({
               ))}
             </p>
           )}
-          {!!ticket?.request_others && ticket?.request_others}
-          {""}
+          {!!ticket?.request_others && ticket?.request_others},{" "}
+          {ticket?.custom_drugInfo}, {ticket?.custom_logistics}
         </TextView>
       </Section>
       {error && (

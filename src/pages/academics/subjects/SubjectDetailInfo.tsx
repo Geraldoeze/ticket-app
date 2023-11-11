@@ -124,7 +124,7 @@ export default function SubjectDetailInfo({
         </TextViewGroup>
         <TextViewGroup>
           <TextView title="State">{data?.state}</TextView>
-          <TextView title="City">{data?.city}</TextView>
+          <TextView title="Address/Location">{data?.city}</TextView>
         </TextViewGroup>
         <TextViewGroup>
           <TextView title="Date">{data?.date}</TextView>
@@ -137,7 +137,11 @@ export default function SubjectDetailInfo({
           <TextView title="Transfer Mode">{data?.transfer_mode} </TextView>
         </TextViewGroup>
         <TextViewGroup>
-          <TextView title="Request Action">{data?.action_request}</TextView>
+          <TextView title="Email">{data?.email}</TextView>
+          <TextView title="Request for Attention">{data?.action_request}</TextView>
+        </TextViewGroup>
+        <TextViewGroup>
+          
           <TextView title="Description">{data?.description}</TextView>
         </TextViewGroup>
         <TextViewGroup>
