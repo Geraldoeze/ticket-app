@@ -234,7 +234,7 @@ export default function NewSubject() {
   // phone handler
   const phoneHandler = (e) => {
     console.log(e);
-    setPhone_Number((prev) => ({ valid: false, value: e }));
+    setPhone_Number(() => ({ valid: false, value: e }));
   };
 
   const backPath = "/app/tickets";
@@ -506,7 +506,7 @@ export default function NewSubject() {
                         {custom_request?.drug_info && (
                           <div className="w-[48%]">
                             <Input
-                              label="Drug Info Others"
+                              label="Drug Information Others"
                               name="custom_drugInfo"
                               placeholder="Type Drug Information Others"
                             />
