@@ -391,7 +391,7 @@ export default function NewSubject() {
                     <div className="w-full xl:w-1/2"></div>
                   </FormGroup>
                   <FormGroup>
-                    {/* <div className="w-full xl:w-1/2">
+                    <div className="w-full xl:w-1/2">
                       <label htmlFor="phoneNumber">Phone Number</label>
                       <PhoneInput
                         containerStyle={{}}
@@ -417,7 +417,7 @@ export default function NewSubject() {
                           Kindly input number
                         </h2>
                       )}
-                    </div> */}
+                    </div>
                   </FormGroup>
                   <FormGroup>
                     <div className="w-full xl:w-1/2">
