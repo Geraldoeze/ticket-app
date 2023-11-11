@@ -37,18 +37,26 @@ type SubjectFormData = {
   status: string;
   amount: string;
   communication_mode: string;
-  phone_number: string;
-  country: string;
   state: string;
   city: string;
   transfer_mode: string;
   request_others: string;
+  email: string;
+  custom_logistics: string;
+  custom_drugInfo: string;
 };
 
 export default function NewSubject() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const navigate = useNavigate();
   const [country, setCountry] = React.useState<string>("");
+  const [phone_number, setPhone_Number] = React.useState<{
+    valid: boolean;
+    value: string;
+  }>({
+    valid: false,
+    value: "",
+  });
   const [stateData, setStateData] = React.useState<any>([]);
   const [ticket, setTicket] = React.useState<any>({
     state: "",
@@ -59,6 +67,7 @@ export default function NewSubject() {
     description: "",
     transfer_mode: "",
     status: "created",
+    email: "",
   });
   const [showConfirmation, setShowConfirmation] = React.useState(false);
   const [invalid, setInvalid] = React.useState(false);
@@ -69,6 +78,10 @@ export default function NewSubject() {
     transfer_mode: false,
     customer_request: false,
     action_request: false,
+  });
+  const [custom_request, setCustom_Request] = useState({
+    logistics: false,
+    drug_info: false,
   });
 
   const options = [
@@ -82,19 +95,20 @@ export default function NewSubject() {
   ];
   const option = {
     Logistics: [
-      "Station of Delivery",
+      "status of Delivery",
       "Availability of Service",
       "Cost of Delivery",
+      "others",
     ],
     "Drug Information": [
-      "Available Brand or Substitute",
-      "Indication",
+      "Available Brand/Substitute/Quantity",
       "Strength",
-      "Pack Size",
+      "Indication",
+      "others",
     ],
   };
   const methods = useForm<SubjectFormData>();
-
+  
   const onSubmit = (data: SubjectFormData) => {
     console.log(data);
     const { errors } = methods.formState;
