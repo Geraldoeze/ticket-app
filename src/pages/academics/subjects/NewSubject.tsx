@@ -108,7 +108,7 @@ export default function NewSubject() {
     ],
   };
   const methods = useForm<SubjectFormData>();
-  
+
   const onSubmit = (data: SubjectFormData) => {
     console.log(data);
     const { errors } = methods.formState;
@@ -128,7 +128,10 @@ export default function NewSubject() {
       status: "created",
       date: new Date().toLocaleDateString(),
     });
-
+    if (phone_number.value?.length <= 2) {
+      setPhone_Number((prev) => ({ ...prev, valid: true }));
+      return;
+    }
     setShowConfirmation(true);
   };
 
@@ -150,6 +153,12 @@ export default function NewSubject() {
 
   const handleCheckboxChangeTwo = (category, option) => {
     if (category === "Logistics") {
+      if (option === "others") {
+        setCustom_Request((prev) => ({
+          ...prev,
+          logistics: !prev.logistics,
+        }));
+      }
       // Check if the option is already in logisticsOptions
       if (logisticsOptions.includes(option)) {
         setLogisticsOptions(logisticsOptions.filter((item) => item !== option));
@@ -157,6 +166,13 @@ export default function NewSubject() {
         setLogisticsOptions([...logisticsOptions, option]);
       }
     } else if (category === "Drug Information") {
+      if (option === "others") {
+        setCustom_Request((prev) => ({
+          ...prev,
+          drug_info: !prev.drug_info,
+        }));
+      }
+
       // Check if the option is already in drugInfoOptions
       if (drugInfoOptions.includes(option)) {
         setDrugInfoOptions(drugInfoOptions.filter((item) => item !== option));
@@ -214,8 +230,15 @@ export default function NewSubject() {
       setStateData([]);
     }
   };
-  const backPath = "/app/tickets";
 
+  // phone handler
+  const phoneHandler = (e) => {
+    console.log(e);
+    setPhone_Number(() => ({ valid: false, value: e }));
+  };
+
+  const backPath = "/app/tickets";
+  
   return (
     <DefaultLayout>
       <BreadCrumb
@@ -714,135 +737,135 @@ function ConfirmationPage({
 //   };
 //   const methods = useForm<SubjectFormData>();
 
-//   const onSubmit = (data: SubjectFormData) => {
-//     console.log(data);
-//     const { errors } = methods.formState;
+  // const onSubmit = (data: SubjectFormData) => {
+  //   console.log(data);
+  //   const { errors } = methods.formState;
 
-//     // Check if there are any validation errors
-//     if (Object.keys(errors).length > 0) {
-//       console.log("Validation errors:", errors);
-//       return; // Exit the function if there are errors
-//     }
-//     setIsLoading(true);
-//     setTimeout(() => {
-//       setIsLoading(false);
-//     }, 4000);
+  //   // Check if there are any validation errors
+  //   if (Object.keys(errors).length > 0) {
+  //     console.log("Validation errors:", errors);
+  //     return; // Exit the function if there are errors
+  //   }
+  //   setIsLoading(true);
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 4000);
 
-//     setTicket({
-//       ...data,
-//       status: "created",
-//       date: new Date().toLocaleDateString(),
-//     });
-//     if (phone_number.value?.length <= 2) {
-//       setPhone_Number((prev) => ({ ...prev, valid: true }));
-//       return;
-//     }
-//     setShowConfirmation(true);
-//   };
+  //   setTicket({
+  //     ...data,
+  //     status: "created",
+  //     date: new Date().toLocaleDateString(),
+  //   });
+  //   if (phone_number.value?.length <= 2) {
+  //     setPhone_Number((prev) => ({ ...prev, valid: true }));
+  //     return;
+  //   }
+  //   setShowConfirmation(true);
+  // };
 
-//   const handleCheckboxChange = (option: any[]) => {
-//     // Check if the option is already in the selectedOptions array
-//     if (option == "Others") {
-//       setOtherInput((prev) => ({
-//         ...prev,
-//         customer_request: !otherInput.customer_request,
-//       }));
-//     }
-//     if (selectedOptions.includes(option)) {
-//       setSelectedOptions(selectedOptions.filter((item) => item !== option));
-//     } else {
-//       // Add the option to selectedOptions
-//       setSelectedOptions([...selectedOptions, option]);
-//     }
-//   };
+  // const handleCheckboxChange = (option: any[]) => {
+  //   // Check if the option is already in the selectedOptions array
+  //   if (option == "Others") {
+  //     setOtherInput((prev) => ({
+  //       ...prev,
+  //       customer_request: !otherInput.customer_request,
+  //     }));
+  //   }
+  //   if (selectedOptions.includes(option)) {
+  //     setSelectedOptions(selectedOptions.filter((item) => item !== option));
+  //   } else {
+  //     // Add the option to selectedOptions
+  //     setSelectedOptions([...selectedOptions, option]);
+  //   }
+  // };
 
-//   const handleCheckboxChangeTwo = (category, option) => {
-//     if (category === "Logistics") {
-//       if (option === "others") {
-//         setCustom_Request((prev) => ({
-//           ...prev,
-//           logistics: !prev.logistics,
-//         }));
-//       }
-//       // Check if the option is already in logisticsOptions
-//       if (logisticsOptions.includes(option)) {
-//         setLogisticsOptions(logisticsOptions.filter((item) => item !== option));
-//       } else {
-//         setLogisticsOptions([...logisticsOptions, option]);
-//       }
-//     } else if (category === "Drug Information") {
-//       if (option === "others") {
-//         setCustom_Request((prev) => ({
-//           ...prev,
-//           drug_info: !prev.drug_info,
-//         }));
-//       }
+  // const handleCheckboxChangeTwo = (category, option) => {
+  //   if (category === "Logistics") {
+  //     if (option === "others") {
+  //       setCustom_Request((prev) => ({
+  //         ...prev,
+  //         logistics: !prev.logistics,
+  //       }));
+  //     }
+  //     // Check if the option is already in logisticsOptions
+  //     if (logisticsOptions.includes(option)) {
+  //       setLogisticsOptions(logisticsOptions.filter((item) => item !== option));
+  //     } else {
+  //       setLogisticsOptions([...logisticsOptions, option]);
+  //     }
+  //   } else if (category === "Drug Information") {
+  //     if (option === "others") {
+  //       setCustom_Request((prev) => ({
+  //         ...prev,
+  //         drug_info: !prev.drug_info,
+  //       }));
+  //     }
 
-//       // Check if the option is already in drugInfoOptions
-//       if (drugInfoOptions.includes(option)) {
-//         setDrugInfoOptions(drugInfoOptions.filter((item) => item !== option));
-//       } else {
-//         setDrugInfoOptions([...drugInfoOptions, option]);
-//       }
-//     }
-//   };
+  //     // Check if the option is already in drugInfoOptions
+  //     if (drugInfoOptions.includes(option)) {
+  //       setDrugInfoOptions(drugInfoOptions.filter((item) => item !== option));
+  //     } else {
+  //       setDrugInfoOptions([...drugInfoOptions, option]);
+  //     }
+  //   }
+  // };
 
-//   const handleOthers = (e: any, value: string) => {
-//     console.log(e, value);
-//     if (e == "Other") {
-//       if (value == "transfer_mode") {
-//         setOtherInput((prev) => ({
-//           ...prev,
-//           transfer_mode: !otherInput?.transfer_mode,
-//         }));
-//       }
-//       if (value == "action_request") {
-//         setOtherInput((prev) => ({
-//           ...prev,
-//           action_request: !otherInput?.action_request,
-//         }));
-//       }
-//     } else {
-//       if (value == "transfer_mode") {
-//         setOtherInput((prev) => ({
-//           ...prev,
-//           transfer_mode: false,
-//         }));
-//       }
-//       if (value == "action_request") {
-//         setOtherInput((prev) => ({
-//           ...prev,
-//           action_request: false,
-//         }));
-//       }
-//     }
-//   };
-//   // close confirmation
-//   const closeConfirmation = () => {
-//     setShowConfirmation(false);
-//   };
+  // const handleOthers = (e: any, value: string) => {
+  //   console.log(e, value);
+  //   if (e == "Other") {
+  //     if (value == "transfer_mode") {
+  //       setOtherInput((prev) => ({
+  //         ...prev,
+  //         transfer_mode: !otherInput?.transfer_mode,
+  //       }));
+  //     }
+  //     if (value == "action_request") {
+  //       setOtherInput((prev) => ({
+  //         ...prev,
+  //         action_request: !otherInput?.action_request,
+  //       }));
+  //     }
+  //   } else {
+  //     if (value == "transfer_mode") {
+  //       setOtherInput((prev) => ({
+  //         ...prev,
+  //         transfer_mode: false,
+  //       }));
+  //     }
+  //     if (value == "action_request") {
+  //       setOtherInput((prev) => ({
+  //         ...prev,
+  //         action_request: false,
+  //       }));
+  //     }
+  //   }
+  // };
+  // // close confirmation
+  // const closeConfirmation = () => {
+  //   setShowConfirmation(false);
+  // };
 
-//   // handle country selected
-//   const handleCountrySelected = async (country: string) => {
-//     setCountry(country);
-//     const code = data?.find((val) => val.name === country)?.code;
-//     // const states = await getStates(code);
-//     // console.log(states);
-//     const states = State.getStatesOfCountry(code);
-//     if (states?.length >= 1) {
-//       setStateData(states);
-//     } else {
-//       setStateData([]);
-//     }
-//   };
+  // // handle country selected
+  // const handleCountrySelected = async (country: string) => {
+  //   setCountry(country);
+  //   const code = data?.find((val) => val.name === country)?.code;
+  //   // const states = await getStates(code);
+  //   // console.log(states);
+  //   const states = State.getStatesOfCountry(code);
+  //   if (states?.length >= 1) {
+  //     setStateData(states);
+  //   } else {
+  //     setStateData([]);
+  //   }
+  // };
 
-//   // phone handler
-//   const phoneHandler = (e) => {
-//     console.log(e);
-//     setPhone_Number(() => ({ valid: false, value: e }));
-//   };
+  // // phone handler
+  // const phoneHandler = (e) => {
+  //   console.log(e);
+  //   setPhone_Number(() => ({ valid: false, value: e }));
+  // };
 
-//   const backPath = "/app/tickets";
+  // const backPath = "/app/tickets";
 
 //   return (
 //     <DefaultLayout>
