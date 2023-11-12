@@ -85,7 +85,7 @@ export default function NewSubject() {
     logistics: false,
     drug_info: false,
   });
-  console.log(codes);
+
   const options = [
     "Stock Availability",
     "Price / Quotation",
@@ -247,7 +247,7 @@ export default function NewSubject() {
     setPhone_Number((prev) => ({ ...prev, code: e.target.value }));
   };
   const backPath = "/app/tickets";
-console.log(phone_number)
+  console.log(phone_number);
   return (
     <DefaultLayout>
       <BreadCrumb
@@ -406,19 +406,20 @@ console.log(phone_number)
                           {/* Select for country code */}
                           <select
                             id="countryCode"
-                            className="border-blue-200 mr-2.5 w-[150px] appearance-none border-2 bg-transparent text-black focus:outline-none"
+                            className="border-blue-200 mr-2.5 w-[50px] appearance-none border-2 bg-transparent text-black focus:outline-none"
                             value={phone_number?.code}
                             onChange={handleCodeSelector}
                           >
                             {codes?.map((val, id) => (
                               <option value={val.countryCodes[0]}>
-                                +{val.countryCodes[0]} {val.country}{" "}
+                                +{val.countryCodes[0]} {val.isoCode2}{" "}
+                                {val.country}
                               </option>
                             ))}
                           </select>
                           <input
                             id="phoneNumber"
-                            className="flex-1 bg-gray text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white"
+                            className="min-w-[150px]  flex-1 bg-gray text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white"
                             value={phone_number?.value}
                             onChange={(e) => phoneHandler(e)}
                             placeholder="Phone Number"
@@ -452,7 +453,7 @@ console.log(phone_number)
                       <h2 className="my-2 text-center text-lg font-semibold">
                         Customer’s Request (Tick as Applicable)
                       </h2>
-                      <div className="flex flex-1">
+                      <div className="block flex-1 sm:flex">
                         <div className="mb-4 w-full xl:w-1/2">
                           {options.map((option) => (
                             <label key={option} className="mx-4 block">
@@ -503,7 +504,7 @@ console.log(phone_number)
                       </div>
                       <div className="flex flex-wrap justify-between">
                         {otherInput?.customer_request && (
-                          <div className="w-[48%]">
+                          <div className="mt-2 w-full sm:w-[48%]">
                             <Input
                               label="Others"
                               name="request_others"
@@ -512,7 +513,7 @@ console.log(phone_number)
                           </div>
                         )}
                         {custom_request?.logistics && (
-                          <div className="w-[48%]">
+                          <div className="mt-2 w-full sm:w-[48%]">
                             <Input
                               label="Logistics Others"
                               name="custom_logistics"
@@ -521,7 +522,7 @@ console.log(phone_number)
                           </div>
                         )}
                         {custom_request?.drug_info && (
-                          <div className="w-[48%]">
+                          <div className="mt-2 w-full sm:w-[48%]">
                             <Input
                               label="Drug Information Others"
                               name="custom_drugInfo"
@@ -625,17 +626,15 @@ function ConfirmationPage({
     const filteredArray = array.filter((item) => {
       // Check if 'Others' is a separate word and not part of a sentence
       const isSeparateWord = !/\wOthers\w/i.test(item);
-      
+
       // If 'Others' is a separate word, include it in the filtered array
-      return isSeparateWord && !item.includes('Others');
+      return isSeparateWord && !item.includes("Others");
     });
-  
+
     return filteredArray;
   }
-  console.log(filterAndRemoveOthers(combinedArray))
-  
-  
-  
+  console.log(filterAndRemoveOthers(combinedArray));
+
   const handleBackClick = () => {
     // navigate("/app/tickets/new");
   };
@@ -684,6 +683,7 @@ function ConfirmationPage({
               <br />{" "}
             </span>
           ))}{" "}
+          {!!ticket?.request_others && ticket?.request_others}{" "}
           {logisticsOptions?.length >= 1 && (
             <p>
               Logistics:{" "}
@@ -695,6 +695,7 @@ function ConfirmationPage({
               ))}{" "}
             </p>
           )}{" "}
+          {ticket?.custom_logistics}
           {drugInfoOptions?.length >= 1 && (
             <p>
               Drug Information:{" "}
@@ -706,8 +707,7 @@ function ConfirmationPage({
               ))}
             </p>
           )}
-          {!!ticket?.request_others && ticket?.request_others},{" "}
-          {ticket?.custom_drugInfo}, {ticket?.custom_logistics}
+          {ticket?.custom_drugInfo}
         </TextView>
       </Section>
       {error && (
