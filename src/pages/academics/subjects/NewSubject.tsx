@@ -18,6 +18,7 @@ import Select from "../../../components/form/customSelect";
 import { addNewTicket, statusUpdate } from "../../../api/httpRequest";
 import { State } from "country-state-city";
 
+
 import CheckboxGroup from "./Chech";
 import SelectField, {
   SelectFieldOption,
@@ -104,8 +105,8 @@ export default function NewSubject() {
     ],
     "Drug Information": [
       "Available Brand/Substitute/Quantity",
-      "Package Size",
       "Strength",
+      "Package Size",
       "Indication",
       "Others",
     ],
@@ -590,7 +591,9 @@ export default function NewSubject() {
               </div>
             </div>
           </div>
+       
         </form>
+       
       </FormProvider>
     </DefaultLayout>
   );

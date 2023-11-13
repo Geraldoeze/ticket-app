@@ -138,7 +138,7 @@ export default function SubjectDetailInfo({
         </TextViewGroup>
         <TextViewGroup>
           <TextView title="Email">{data?.email}</TextView>
-          <TextView title="Request for Attention">{data?.action_request}</TextView>
+          <TextView title="Request Attention To">{data?.action_request}</TextView>
         </TextViewGroup>
         <TextViewGroup>
           
