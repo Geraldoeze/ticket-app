@@ -348,6 +348,7 @@ export default function Subjects() {
                 <Table.Row>Date</Table.Row>
                 <Table.Row>Transfer Mode</Table.Row>
                 <Table.Row>Communication Mode</Table.Row>
+                <Table.Row>Attention To</Table.Row>
                 <Table.Row>Status</Table.Row>
               </Table.TableRow>
 
@@ -372,7 +373,7 @@ export default function Subjects() {
                     <Table.Cell>{user?.date}</Table.Cell>
                     <Table.Cell>{user?.transfer_mode}</Table.Cell>
                     <Table.Cell>{user?.communication_mode}</Table.Cell>
-
+                    <Table.Cell>{user?.action_request}</Table.Cell>
                     <Table.StatusCell variant={getVariant(user?.status)}>
                       {user?.status}
                     </Table.StatusCell>

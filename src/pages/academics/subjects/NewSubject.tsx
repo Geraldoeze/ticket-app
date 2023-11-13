@@ -104,6 +104,7 @@ export default function NewSubject() {
     ],
     "Drug Information": [
       "Available Brand/Substitute/Quantity",
+      "Package Size",
       "Strength",
       "Indication",
       "Others",
@@ -231,8 +232,21 @@ export default function NewSubject() {
     } else {
       setStateData([]);
     }
+    changePhoneCode(code)
   };
 
+  // set phone code to country
+  const changePhoneCode = (countryCode: any) => {
+    console.log(countryCode)
+   
+    const phoneCode = codes?.find((val) => val.isoCode2 === countryCode);
+    if (!!phoneCode) {
+      setPhone_Number((prev) => ({
+        ...prev,
+        code: phoneCode?.countryCodes[0]
+      }));
+    }
+  }
   // phone handler
   const phoneHandler = (e) => {
     setPhone_Number((prev) => ({
@@ -247,7 +261,7 @@ export default function NewSubject() {
     setPhone_Number((prev) => ({ ...prev, code: e.target.value }));
   };
   const backPath = "/app/tickets";
-  console.log(phone_number);
+  
   return (
     <DefaultLayout>
       <BreadCrumb
@@ -321,7 +335,7 @@ export default function NewSubject() {
                       <div className="w-full xl:w-1/2">
                         <Select
                           name="action_request"
-                          label="Request for Attention "
+                          label="Request Attention To"
                           onChange={(e) => handleOthers(e, "action_request")}
                           rules={{ required: "Select Action request" }}
                         >
@@ -419,6 +433,7 @@ export default function NewSubject() {
                           </select>
                           <input
                             id="phoneNumber"
+                            type="number"
                             className="min-w-[150px]  flex-1 bg-gray text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white"
                             value={phone_number?.value}
                             onChange={(e) => phoneHandler(e)}
@@ -666,7 +681,7 @@ function ConfirmationPage({
         <TextView title="Country">{country}</TextView>
         <TextView title="State">{ticket?.state}</TextView>
         <TextView title="City">{ticket?.city}</TextView>
-        <TextView title="Action Request">{ticket?.action_request}</TextView>
+        <TextView title="Request Attention To">{ticket?.action_request}</TextView>
         <TextView title="Date">{ticket?.date}</TextView>
         <TextView title="Status">{ticket?.status}</TextView>
         <TextView title="Description">{ticket?.description}</TextView>

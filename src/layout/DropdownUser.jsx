@@ -61,10 +61,10 @@ const DropdownUser = () => {
           </span>
           
         </span>
-
+{/* 
         <span className="h-12 w-12 rounded-full">
           <img src={Logo} alt="User" style={{borderRadius: '50%', height: '35px'}} />
-        </span>
+        </span> */}
 
         <svg
           className={`hidden fill-current sm:block ${

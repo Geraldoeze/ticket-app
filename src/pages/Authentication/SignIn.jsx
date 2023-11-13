@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import FieldInput from "../../components/FieldInput";
 import PasswordInput from "../../components/PasswordInput";
 import { Button } from "../../components/form";
-import Logo from "../../images/logo/vastLogo.jpeg";
+import Logo from "../../images/logo/vastImage.jpeg";
 import { setLocalStorageItem } from "../../utils/storage";
 import { loginUser } from "../../api/httpRequest";
 
