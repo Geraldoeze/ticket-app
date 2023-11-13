@@ -93,12 +93,11 @@ export default function NewSubject() {
     "Order Placement",
     "List of Ordered Products",
     "Value of Ordered Products",
-    "Value of Order",
     "Others",
   ];
   const option = {
     Logistics: [
-      "status of Delivery",
+      "Status of Delivery",
       "Availability of Service",
       "Cost of Delivery",
       "Others",

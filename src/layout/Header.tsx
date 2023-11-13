@@ -15,7 +15,7 @@ const Header = (props = { sidebarOpen, setSidebarOpen }) => {
             className=" mx-auto h-10 w-auto "
             src={LogoTwo}
             alt="ticket"
-            style={{ width: "50px", height: "40px", borderRadius: "4px " }}
+            style={{ width: "65px", height: "50px", borderRadius: "4px " }}
           />
         </Link>
         <div className="flex w-full items-center gap-2 sm:gap-4 lg:hidden">
