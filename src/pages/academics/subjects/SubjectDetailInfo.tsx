@@ -106,12 +106,12 @@ export default function SubjectDetailInfo({
           >
             Unresolved
           </ButtonEvent>
-          <ButtonEvent
+          {/* <ButtonEvent
             variant="delete"
             onClick={() => handleDeleteSubject(data?._id)}
           >
             Delete
-          </ButtonEvent>
+          </ButtonEvent> */}
         </ButtonEventGroup>
         <Header variant="h2">Subject Informtion</Header>
         <TextViewGroup>
