@@ -94,3 +94,13 @@ export const statusPending = (userId) => {
 };
 
 
+// admin
+export const loginAdmin = async (data) => {
+  let uri = "";
+  try {
+    const uri = `/admin/auth`;
+    return await request.post(uri, data);
+  } catch (e) {
+    return { status: "error", msg: e?.response?.data?.message || e?.message };
+  }
+};

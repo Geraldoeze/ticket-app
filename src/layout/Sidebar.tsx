@@ -8,7 +8,7 @@ import {
   ISidebarNav, 
    
   ADMIN_NAV_DATA, 
-  
+  ADMIN_SUPER_DATA
   
   
 } from './config';
@@ -36,6 +36,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: {sidebarOpen: any, setSidebarO
   //users = admin, teacher, burser, student and parent
   // const emptyArray: any[] = [];
   const navConfig = ADMIN_NAV_DATA
+  const adminConfig = ADMIN_SUPER_DATA
     // currentUser.userType === 'admin' ? ADMIN_NAV_DATA
     // : currentUser.userType === 'teacher' ? TEACHER_NAV_DATA
     // : currentUser.userType === 'student' ? STUDENT_NAV_DATA
@@ -125,6 +126,94 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: {sidebarOpen: any, setSidebarO
         <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
           {
             navConfig.map((navdata: any, index: number) => (
+              <Fragment key={navdata.section + '-' + index}>
+                <h3 className="mb-4 ml-4 text-sm font-semibold text-white">
+                  {navdata.section}
+                </h3>
+                <ul className="mb-6 flex flex-col gap-1.5">
+                  {
+                    navdata.children.map((nchild: any, nindex: number) => {
+                      const NChildIcon = nchild.icon;
+                      return (
+                        nchild?.children && nchild?.children?.length > 0
+                          ? (
+                            <SidebarLinkGroup
+                              key={nchild.name + '-' + nindex}
+                              activeCondition={pathname === '/app' || pathname.includes(nchild.path)}>
+                              {(handleClick: any, open: boolean) => {
+                                return (
+                                  <React.Fragment>
+                                    <NavLink
+                                      to="#"
+                                      className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === '/app' ||
+                                        pathname.includes(nchild.path)) &&
+                                        'bg-graydark dark:bg-meta-4'
+                                        }`}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        sidebarExpanded
+                                          ? handleClick()
+                                          : setSidebarExpanded(true);
+                                      }}
+                                    >
+                                      <NChildIcon />
+                                      {nchild.name}
+                                      <RiArrowDownSLine style={{ width: 25, height: 25 }} className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'
+                                        }`} />
+                                    </NavLink>
+                                    {/* <!-- Dropdown Menu Start --> */}
+                                    <div className={`translate transform overflow-hidden ${!open && 'hidden'}`}>
+                                      <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
+                                        {
+                                          nchild.children.map((schild: any, sindex: number) => {
+                                            const SChildIcon = schild.icon;
+
+                                            return (
+                                              <li key={schild.name + '-' + sindex}>
+                                                <NavLink
+                                                  to={schild.path}
+                                                  className={({ isActive }) =>
+                                                    'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                                    (isActive && '!text-white')
+                                                  }
+                                                >
+                                                  <SChildIcon />
+                                                  {schild.name}
+                                                </NavLink>
+                                              </li>
+                                            )
+                                          })
+                                        }
+                                      </ul>
+                                    </div>
+                                    {/* <!-- Dropdown Menu End --> */}
+                                  </React.Fragment>
+                                );
+                              }}
+                            </SidebarLinkGroup>
+                          )
+                          : (
+                            <li key={nindex}>
+                              <NavLink
+                                to={nchild?.path}
+                                className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes('calendar') &&
+                                  'bg-graydark dark:bg-meta-4'
+                                  }`}
+                              >
+                                <NChildIcon />
+                                {nchild.name}
+                              </NavLink>
+                            </li>
+                          )
+                      )
+                    })
+                  }
+                </ul>
+              </Fragment>
+            ))
+          }
+           {
+            adminConfig.map((navdata: any, index: number) => (
               <Fragment key={navdata.section + '-' + index}>
                 <h3 className="mb-4 ml-4 text-sm font-semibold text-white">
                   {navdata.section}
