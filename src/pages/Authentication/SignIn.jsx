@@ -31,6 +31,7 @@ export default function SignIn(props) {
         setLocalStorageItem({
           userId: result?.data?.userDetails._id,
           username: result?.data?.userDetails.username,
+          account: 'user'
         });
         navigate("/app/tickets");
       } else {

@@ -15,7 +15,7 @@ import { Container, Header, Section } from "../../../components/container";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Select from "../../../components/form/customSelect";
-import { addNewTicket, statusUpdate } from "../../../api/httpRequest";
+import { addNewUser } from "../../../api/httpRequest";
 
 import SelectField, {
   SelectFieldOption,
@@ -159,8 +159,8 @@ function ConfirmationPage({
   const navigate = useNavigate();
 
   const getData = JSON.parse(getLocalStorageItem());
-  const userId = getData.userId;
-  console.log(userId);
+  const adminId = getData.adminId;
+  console.log(adminId);
 
   const handleBackClick = () => {
     // navigate("/app/tickets/new");
@@ -168,10 +168,10 @@ function ConfirmationPage({
   const handleSubmitClick = async () => {
     const send = {
       ...newUser,
-      userId,
+      adminId,
     };
     console.log(send);
-    const sendData = false;
+    const sendData = await addNewUser(send);
     console.log(sendData);
     if (sendData?.status == 201) {
       navigate("/app/admins/dashboard");

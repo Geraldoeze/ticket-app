@@ -13,7 +13,7 @@ const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const trigger = useRef(null);
   const dropdown = useRef(null);
-  const details = JSON.parse(getLocalStorageItem());
+  const getData = JSON.parse(getLocalStorageItem());
 
   // close on click outside
   useEffect(() => {
@@ -57,7 +57,7 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {details?.username}
+            {getData?.username}
           </span>
           
         </span>

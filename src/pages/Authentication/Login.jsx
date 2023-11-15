@@ -25,12 +25,12 @@ export default function Login(props) {
         password,
       };
       const result = await loginAdmin(body);
-      console.log(result);
+      console.log(result.status);
       if (result?.status === 200) {
-        console.log(result?.data?.userDetails._id);
+        console.log(result?.data?.adminDetails._id);
         setLocalStorageItem({
-          userId: result?.data?.userDetails._id,
-          username: result?.data?.userDetails.username,
+          adminId: result?.data?.adminDetails._id,
+          username: result?.data?.adminDetails.username,
           account: "superAdmin",
         });
         navigate("/app/admins/dashboard");

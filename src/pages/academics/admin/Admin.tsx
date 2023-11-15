@@ -12,7 +12,7 @@ import {
 import { ButtonEvent, ButtonEventGroup } from "../../../components/button";
 import Modal from "../../../components/modal";
 
-import { getTickets } from "../../../api/httpRequest";
+import { getUsers } from "../../../api/httpRequest";
 import { getLocalStorageItem } from "../../../utils/storage";
 
 import Logo from "../../../images/logo/vastImage.jpeg";
@@ -32,34 +32,17 @@ export default function Admin() {
   const [showFilter, setShowFilter] = React.useState<boolean>(false);
 
   const [checkData, setCheckData] = React.useState<any>([
-    {
-      _id: "cueincuerujero;",
-      username: "BetaTester",
-      email: "testUser@test.com",
-      password: "AbcD1111",
-    },
-    {
-      _id: "ocincioearipj;",
-      username: "BetaTester",
-      email: "testUserOne@test.com",
-      password: "AbcD1111",
-    },
-    {
-      _id: "cpvotaioettgr;",
-      username: "BetaTester",
-      email: "testUserTwo@test.com",
-      password: "AbcD1111",
-    },
+ 
   ]);
 
   useEffect(() => {
     const getData = JSON.parse(getLocalStorageItem());
     const getAll = async () => {
       if (!!getData) {
-        const result = await getTickets(getData?.userId, page, pageLimit);
+        const result = await getUsers(getData?.adminId, page, pageLimit);
         console.log(result.data);
         if (result?.status == 200) {
-          // setCheckData(result?.data?.response);
+          setCheckData(result?.data?.response);
           setTotalPage(result.data?.numberOfPages);
         } else {
           alert("Error while Fetching Data");
@@ -185,7 +168,7 @@ export default function Admin() {
                     </Table.Cell>
 
                     <Table.Cell>{user?.username}</Table.Cell>
-                    <Table.Cell>{user?.email}</Table.Cell>
+                    <Table.Cell>{user?.email ?? 'test@testUser.com'}</Table.Cell>
                     <Table.Cell>{user?.password}</Table.Cell>
                   </Table.CellRows>
                 ))}

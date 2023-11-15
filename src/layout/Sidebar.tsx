@@ -1,52 +1,52 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import React, { Fragment, useEffect, useRef, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 // import Logo from '../images/logo/logo.svg';
-import Logo from '../images/logo/logo_vast.jpeg';
-import SidebarLinkGroup from './SidebarLinkGroup';
-import { RiArrowDownSLine } from 'react-icons/ri';
-import { 
-  ISidebarNav, 
-   
-  ADMIN_NAV_DATA, 
-  ADMIN_SUPER_DATA
-  
-  
-} from './config';
-type UserAccount = { 
-  id: string; 
-  userType: 'admin' | 'teacher' | 'burser' | 'student' | 'parent' | 'guardian'
-}
+import Logo from "../images/logo/logo_vast.jpeg";
+import SidebarLinkGroup from "./SidebarLinkGroup";
+import { RiArrowDownSLine } from "react-icons/ri";
+import { ISidebarNav, ADMIN_NAV_DATA, ADMIN_SUPER_DATA } from "./config";
+import { getLocalStorageItem } from "../utils/storage";
 
+type UserAccount = {
+  id: string;
+  userType: "admin" | "teacher" | "burser" | "student" | "parent" | "guardian";
+};
 
-const currentUser: UserAccount = { userType: 'admin', id: '123'}
+const currentUser: UserAccount = { userType: "admin", id: "123" };
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: {sidebarOpen: any, setSidebarOpen: any}) => {
+const Sidebar = ({
+  sidebarOpen,
+  setSidebarOpen,
+}: {
+  sidebarOpen: any;
+  setSidebarOpen: any;
+}) => {
   const location = useLocation();
   const { pathname } = location;
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
-
-  const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
+  const getData = JSON.parse(getLocalStorageItem());
+  const storedSidebarExpanded = localStorage.getItem("sidebar-expanded");
   const [sidebarExpanded, setSidebarExpanded] = useState(
-    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
+    storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
 
   //nav configuration
   //users = admin, teacher, burser, student and parent
   // const emptyArray: any[] = [];
-  const navConfig = ADMIN_NAV_DATA
-  const adminConfig = ADMIN_SUPER_DATA
-    // currentUser.userType === 'admin' ? ADMIN_NAV_DATA
-    // : currentUser.userType === 'teacher' ? TEACHER_NAV_DATA
-    // : currentUser.userType === 'student' ? STUDENT_NAV_DATA
-    // : currentUser.userType === 'burser' ? BURSER_NAV_DATA
-    // : ['parent', 'guardian'].includes(currentUser.userType) ? PARENT_NAV_DATA
-    // : emptyArray
+  const navConfig = ADMIN_NAV_DATA;
+  const adminConfig = ADMIN_SUPER_DATA;
+  // currentUser.userType === 'admin' ? ADMIN_NAV_DATA
+  // : currentUser.userType === 'teacher' ? TEACHER_NAV_DATA
+  // : currentUser.userType === 'student' ? STUDENT_NAV_DATA
+  // : currentUser.userType === 'burser' ? BURSER_NAV_DATA
+  // : ['parent', 'guardian'].includes(currentUser.userType) ? PARENT_NAV_DATA
+  // : emptyArray
 
   // close on click outside
   useEffect(() => {
-    const clickHandler = ({ target }: {[key: string]: any}) => {
+    const clickHandler = ({ target }: { [key: string]: any }) => {
       if (!sidebar.current || !trigger.current) return;
       if (
         !sidebarOpen ||
@@ -56,48 +56,47 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: {sidebarOpen: any, setSidebarO
         return;
       setSidebarOpen(false);
     };
-    document.addEventListener('click', clickHandler);
-    return () => document.removeEventListener('click', clickHandler);
+    document.addEventListener("click", clickHandler);
+    return () => document.removeEventListener("click", clickHandler);
   });
 
   // close if the esc key is pressed
   useEffect(() => {
-    const keyHandler = ({ keyCode }: {[key: string]: any;}) => {
+    const keyHandler = ({ keyCode }: { [key: string]: any }) => {
       if (!sidebarOpen || keyCode !== 27) return;
       setSidebarOpen(false);
     };
-    document.addEventListener('keydown', keyHandler);
-    return () => document.removeEventListener('keydown', keyHandler);
+    document.addEventListener("keydown", keyHandler);
+    return () => document.removeEventListener("keydown", keyHandler);
   });
 
   useEffect(() => {
-    localStorage.setItem('sidebar-expanded', sidebarExpanded.toString());
+    localStorage.setItem("sidebar-expanded", sidebarExpanded.toString());
     if (sidebarExpanded) {
-      document.querySelector('body')?.classList.add('sidebar-expanded');
+      document.querySelector("body")?.classList.add("sidebar-expanded");
     } else {
-      document.querySelector('body')?.classList.remove('sidebar-expanded');
+      document.querySelector("body")?.classList.remove("sidebar-expanded");
     }
   }, [sidebarExpanded]);
 
   return (
     <aside
       ref={sidebar}
-      className={`absolute left-0 top-0 z-9999 flex h-screen w-52 flex-col overflow-y-hidden bg-[#32a544] duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+      className={`absolute left-0 top-0 z-9999 flex h-screen w-52 flex-col overflow-y-hidden bg-[#32a544] duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/app">
-          <div >
-            <h1 className="text-white font-extrabold text-lg">Vastovers CRM</h1>
-           
-          
+          <div>
+            <h1 className="text-lg font-extrabold text-white">Vastovers CRM</h1>
           </div>
           {/* <img src={Logo} alt="Logo" style={{width: '90px', height: '90px'}} /> */}
         </NavLink>
 
         <button
-          type='button'
+          type="button"
           ref={trigger}
           onClick={() => setSidebarOpen(!sidebarOpen)}
           aria-controls="sidebar"
@@ -124,182 +123,194 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: {sidebarOpen: any, setSidebarO
       <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
         {/* <!-- Sidebar Menu --> */}
         <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
-          {
+          {getData.account === "user" &&
             navConfig.map((navdata: any, index: number) => (
-              <Fragment key={navdata.section + '-' + index}>
+              <Fragment key={navdata.section + "-" + index}>
                 <h3 className="mb-4 ml-4 text-sm font-semibold text-white">
                   {navdata.section}
                 </h3>
                 <ul className="mb-6 flex flex-col gap-1.5">
-                  {
-                    navdata.children.map((nchild: any, nindex: number) => {
-                      const NChildIcon = nchild.icon;
-                      return (
-                        nchild?.children && nchild?.children?.length > 0
-                          ? (
-                            <SidebarLinkGroup
-                              key={nchild.name + '-' + nindex}
-                              activeCondition={pathname === '/app' || pathname.includes(nchild.path)}>
-                              {(handleClick: any, open: boolean) => {
-                                return (
-                                  <React.Fragment>
-                                    <NavLink
-                                      to="#"
-                                      className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === '/app' ||
-                                        pathname.includes(nchild.path)) &&
-                                        'bg-graydark dark:bg-meta-4'
-                                        }`}
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        sidebarExpanded
-                                          ? handleClick()
-                                          : setSidebarExpanded(true);
-                                      }}
-                                    >
-                                      <NChildIcon />
-                                      {nchild.name}
-                                      <RiArrowDownSLine style={{ width: 25, height: 25 }} className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'
-                                        }`} />
-                                    </NavLink>
-                                    {/* <!-- Dropdown Menu Start --> */}
-                                    <div className={`translate transform overflow-hidden ${!open && 'hidden'}`}>
-                                      <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
-                                        {
-                                          nchild.children.map((schild: any, sindex: number) => {
-                                            const SChildIcon = schild.icon;
-
-                                            return (
-                                              <li key={schild.name + '-' + sindex}>
-                                                <NavLink
-                                                  to={schild.path}
-                                                  className={({ isActive }) =>
-                                                    'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                                    (isActive && '!text-white')
-                                                  }
-                                                >
-                                                  <SChildIcon />
-                                                  {schild.name}
-                                                </NavLink>
-                                              </li>
-                                            )
-                                          })
-                                        }
-                                      </ul>
-                                    </div>
-                                    {/* <!-- Dropdown Menu End --> */}
-                                  </React.Fragment>
-                                );
-                              }}
-                            </SidebarLinkGroup>
-                          )
-                          : (
-                            <li key={nindex}>
+                  {navdata.children.map((nchild: any, nindex: number) => {
+                    const NChildIcon = nchild.icon;
+                    return nchild?.children && nchild?.children?.length > 0 ? (
+                      <SidebarLinkGroup
+                        key={nchild.name + "-" + nindex}
+                        activeCondition={
+                          pathname === "/app" || pathname.includes(nchild.path)
+                        }
+                      >
+                        {(handleClick: any, open: boolean) => {
+                          return (
+                            <React.Fragment>
                               <NavLink
-                                to={nchild?.path}
-                                className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes('calendar') &&
-                                  'bg-graydark dark:bg-meta-4'
-                                  }`}
+                                to="#"
+                                className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                                  (pathname === "/app" ||
+                                    pathname.includes(nchild.path)) &&
+                                  "bg-graydark dark:bg-meta-4"
+                                }`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  sidebarExpanded
+                                    ? handleClick()
+                                    : setSidebarExpanded(true);
+                                }}
                               >
                                 <NChildIcon />
                                 {nchild.name}
+                                <RiArrowDownSLine
+                                  style={{ width: 25, height: 25 }}
+                                  className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
+                                    open && "rotate-180"
+                                  }`}
+                                />
                               </NavLink>
-                            </li>
-                          )
-                      )
-                    })
-                  }
+                              {/* <!-- Dropdown Menu Start --> */}
+                              <div
+                                className={`translate transform overflow-hidden ${
+                                  !open && "hidden"
+                                }`}
+                              >
+                                <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
+                                  {nchild.children.map(
+                                    (schild: any, sindex: number) => {
+                                      const SChildIcon = schild.icon;
+
+                                      return (
+                                        <li key={schild.name + "-" + sindex}>
+                                          <NavLink
+                                            to={schild.path}
+                                            className={({ isActive }) =>
+                                              "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                              (isActive && "!text-white")
+                                            }
+                                          >
+                                            <SChildIcon />
+                                            {schild.name}
+                                          </NavLink>
+                                        </li>
+                                      );
+                                    }
+                                  )}
+                                </ul>
+                              </div>
+                              {/* <!-- Dropdown Menu End --> */}
+                            </React.Fragment>
+                          );
+                        }}
+                      </SidebarLinkGroup>
+                    ) : (
+                      <li key={nindex}>
+                        <NavLink
+                          to={nchild?.path}
+                          className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                            pathname.includes("calendar") &&
+                            "bg-graydark dark:bg-meta-4"
+                          }`}
+                        >
+                          <NChildIcon />
+                          {nchild.name}
+                        </NavLink>
+                      </li>
+                    );
+                  })}
                 </ul>
               </Fragment>
-            ))
-          }
-           {
+            ))}
+          {getData.account === "superAdmin" &&
             adminConfig.map((navdata: any, index: number) => (
-              <Fragment key={navdata.section + '-' + index}>
+              <Fragment key={navdata.section + "-" + index}>
                 <h3 className="mb-4 ml-4 text-sm font-semibold text-white">
                   {navdata.section}
                 </h3>
                 <ul className="mb-6 flex flex-col gap-1.5">
-                  {
-                    navdata.children.map((nchild: any, nindex: number) => {
-                      const NChildIcon = nchild.icon;
-                      return (
-                        nchild?.children && nchild?.children?.length > 0
-                          ? (
-                            <SidebarLinkGroup
-                              key={nchild.name + '-' + nindex}
-                              activeCondition={pathname === '/app' || pathname.includes(nchild.path)}>
-                              {(handleClick: any, open: boolean) => {
-                                return (
-                                  <React.Fragment>
-                                    <NavLink
-                                      to="#"
-                                      className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === '/app' ||
-                                        pathname.includes(nchild.path)) &&
-                                        'bg-graydark dark:bg-meta-4'
-                                        }`}
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        sidebarExpanded
-                                          ? handleClick()
-                                          : setSidebarExpanded(true);
-                                      }}
-                                    >
-                                      <NChildIcon />
-                                      {nchild.name}
-                                      <RiArrowDownSLine style={{ width: 25, height: 25 }} className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'
-                                        }`} />
-                                    </NavLink>
-                                    {/* <!-- Dropdown Menu Start --> */}
-                                    <div className={`translate transform overflow-hidden ${!open && 'hidden'}`}>
-                                      <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
-                                        {
-                                          nchild.children.map((schild: any, sindex: number) => {
-                                            const SChildIcon = schild.icon;
-
-                                            return (
-                                              <li key={schild.name + '-' + sindex}>
-                                                <NavLink
-                                                  to={schild.path}
-                                                  className={({ isActive }) =>
-                                                    'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                                    (isActive && '!text-white')
-                                                  }
-                                                >
-                                                  <SChildIcon />
-                                                  {schild.name}
-                                                </NavLink>
-                                              </li>
-                                            )
-                                          })
-                                        }
-                                      </ul>
-                                    </div>
-                                    {/* <!-- Dropdown Menu End --> */}
-                                  </React.Fragment>
-                                );
-                              }}
-                            </SidebarLinkGroup>
-                          )
-                          : (
-                            <li key={nindex}>
+                  {navdata.children.map((nchild: any, nindex: number) => {
+                    const NChildIcon = nchild.icon;
+                    return nchild?.children && nchild?.children?.length > 0 ? (
+                      <SidebarLinkGroup
+                        key={nchild.name + "-" + nindex}
+                        activeCondition={
+                          pathname === "/app" || pathname.includes(nchild.path)
+                        }
+                      >
+                        {(handleClick: any, open: boolean) => {
+                          return (
+                            <React.Fragment>
                               <NavLink
-                                to={nchild?.path}
-                                className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes('calendar') &&
-                                  'bg-graydark dark:bg-meta-4'
-                                  }`}
+                                to="#"
+                                className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                                  (pathname === "/app" ||
+                                    pathname.includes(nchild.path)) &&
+                                  "bg-graydark dark:bg-meta-4"
+                                }`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  sidebarExpanded
+                                    ? handleClick()
+                                    : setSidebarExpanded(true);
+                                }}
                               >
                                 <NChildIcon />
                                 {nchild.name}
+                                <RiArrowDownSLine
+                                  style={{ width: 25, height: 25 }}
+                                  className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
+                                    open && "rotate-180"
+                                  }`}
+                                />
                               </NavLink>
-                            </li>
-                          )
-                      )
-                    })
-                  }
+                              {/* <!-- Dropdown Menu Start --> */}
+                              <div
+                                className={`translate transform overflow-hidden ${
+                                  !open && "hidden"
+                                }`}
+                              >
+                                <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
+                                  {nchild.children.map(
+                                    (schild: any, sindex: number) => {
+                                      const SChildIcon = schild.icon;
+
+                                      return (
+                                        <li key={schild.name + "-" + sindex}>
+                                          <NavLink
+                                            to={schild.path}
+                                            className={({ isActive }) =>
+                                              "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                              (isActive && "!text-white")
+                                            }
+                                          >
+                                            <SChildIcon />
+                                            {schild.name}
+                                          </NavLink>
+                                        </li>
+                                      );
+                                    }
+                                  )}
+                                </ul>
+                              </div>
+                              {/* <!-- Dropdown Menu End --> */}
+                            </React.Fragment>
+                          );
+                        }}
+                      </SidebarLinkGroup>
+                    ) : (
+                      <li key={nindex}>
+                        <NavLink
+                          to={nchild?.path}
+                          className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                            pathname.includes("calendar") &&
+                            "bg-graydark dark:bg-meta-4"
+                          }`}
+                        >
+                          <NChildIcon />
+                          {nchild.name}
+                        </NavLink>
+                      </li>
+                    );
+                  })}
                 </ul>
               </Fragment>
-            ))
-          }
+            ))}
         </nav>
         {/* <!-- Sidebar Menu --> */}
       </div>

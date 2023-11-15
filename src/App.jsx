@@ -23,7 +23,6 @@ import ClassesRoutePages from "./pages/academics/classes";
 import QuestionsRoutePages from "./pages/academics/questions";
 import EvaluationsRoutePages from "./pages/academics/evaluations";
 
-
 import { ROUTES_CONFIG } from "./layout/config";
 import AuthGuard from "./utils/authGuard";
 import AdminRoutePages from "./pages/academics/admin";
@@ -33,6 +32,7 @@ import AddPayments from "./pages/burser/accounts/expenditures/Payments/AddPaymen
 import Expenses from "./pages/burser/accounts/expenditures/Expenses/Expenses";
 import AddExpenses from "./pages/burser/accounts/expenditures/Expenses/AddExpenses";
 import Login from "./pages/Authentication/Login";
+import AdminAuthGuard from "./utils/adminAuthGuard";
 
 //import axios from 'axios';
 // axios.defaults.baseURL = "http://localhost:4000/v1";
@@ -125,16 +125,41 @@ const App = () => {
             </Route> */}
 
             {/*  */}
-            <Route path={ROUTES_CONFIG.admin.entities.super} element={<RouteLayout />}>
-              <Route path="dashboard" element={<AdminRoutePages.Admin />} />
-              <Route path="new" element={<AdminRoutePages.NewAdmin />} /> 
+            <Route
+              path={ROUTES_CONFIG.admin.entities.super}
+              element={
+                <AdminAuthGuard>
+                  <RouteLayout />{" "}
+                </AdminAuthGuard>
+              }
+            >
+              <Route
+                path="dashboard"
+                element={
+                  <AdminAuthGuard>
+                    <AdminRoutePages.Admin />
+                  </AdminAuthGuard>
+                }
+              />
+              <Route
+                path="new"
+                element={
+                  <AdminAuthGuard>
+                    <AdminRoutePages.NewAdmin />{" "}
+                  </AdminAuthGuard>
+                }
+              />
               <Route index element={<AdminRoutePages.Admin />} />
             </Route>
 
             {/*  */}
             <Route
               path={ROUTES_CONFIG.admin.entities.tickets}
-              element={<AuthGuard><RouteLayout /></AuthGuard>}
+              element={
+                <AuthGuard>
+                  <RouteLayout />
+                </AuthGuard>
+              }
             >
               <Route
                 path="tickets"
@@ -154,7 +179,11 @@ const App = () => {
               />
               <Route
                 path=":ticketId"
-                element={<SubjectsRoutePages.Subject />}
+                element={
+                  <AuthGuard>
+                    <SubjectsRoutePages.Subject />
+                  </AuthGuard>
+                }
               />
               <Route index element={<SubjectsRoutePages.Subjects />} />
             </Route>
@@ -168,14 +197,21 @@ const App = () => {
               <Route index element={<ClassesRoutePages.Classes />} />
             </Route> */}
 
-            <Route path={ROUTES_CONFIG.admin.entities.questions} element={<RouteLayout />}>
-              <Route path="questions" element={<QuestionsRoutePages.Questions />} />
+            <Route
+              path={ROUTES_CONFIG.admin.entities.questions}
+              element={<RouteLayout />}
+            >
+              <Route
+                path="questions"
+                element={<QuestionsRoutePages.Questions />}
+              />
               <Route path="new" element={<QuestionsRoutePages.NewQuestion />} />
-              <Route path=":questionId" element={<QuestionsRoutePages.Question />} />
+              <Route
+                path=":questionId"
+                element={<QuestionsRoutePages.Question />}
+              />
               <Route index element={<QuestionsRoutePages.Questions />} />
             </Route>
-
-          
 
             {/* <Route index element={<TemplateRouter.DataTablePage />} /> */}
           </Route>

@@ -99,6 +99,29 @@ export const loginAdmin = async (data) => {
   let uri = "";
   try {
     const uri = `/admin/auth`;
+
+    return await request.post(uri, data);
+  } catch (e) {
+    return { status: "error", msg: e?.response?.data?.message || e?.message };
+  }
+};
+
+// admin route
+
+export const getUsers = async (adminId, page, pageLimit) => {
+  let uri = "";
+  try {
+    const uri = `/admin/${adminId}?page=${page}&pageSize=${pageLimit}`;
+    return await request.get(uri, {});
+  } catch (e) {
+    return { status: "error", msg: e?.response?.data?.message || e?.message };
+  }
+};
+
+export const addNewUser = async (data) => {
+  let uri = "";
+  try {
+    const uri = `/admin/newuser`;
     return await request.post(uri, data);
   } catch (e) {
     return { status: "error", msg: e?.response?.data?.message || e?.message };
